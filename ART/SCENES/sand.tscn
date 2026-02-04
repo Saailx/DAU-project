@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bg3rq5jlmquf7"]
+
+[ext_resource type="Script" uid="uid://cduj7041fkq1l" path="res://SCRIPTS/sand_texture.gd" id="2_xc6do"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_xc6do"]
+size = Vector2(30, 30)
+subdivide_width = 64
+subdivide_depth = 64
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gro4q"]
+
+[node name="Node3D" type="Node3D" unique_id=1816009884]
+
+[node name="Sand" type="MeshInstance3D" parent="." unique_id=1731980959]
+mesh = SubResource("PlaneMesh_xc6do")
+surface_material_override/0 = SubResource("StandardMaterial3D_gro4q")
+script = ExtResource("2_xc6do")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=642526484]
+transform = Transform3D(1, 0, 0, 0, 0.8646345, 0.50240135, 0, -0.50240135, 0.8646345, 0, 6.0575542, 11.224866)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1525562411]
+transform = Transform3D(1, 0, 0, 0, 0.6709315, 0.74151933, 0, -0.74151933, 0.6709315, 0, 7.2172976, 0)
