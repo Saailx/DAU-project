@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://cgq40b18astma"]
+
+[ext_resource type="Material" uid="uid://cm0snq05t2dp6" path="res://ART/MATERIALS/sand.tres" id="2_mbyyn"]
+[ext_resource type="PackedScene" uid="uid://bvgpkajxt5mnb" path="res://ART/SCENES/sandcastle.tscn" id="3_jaihn"]
+[ext_resource type="Shader" uid="uid://ds42ej1hdnxm8" path="res://ART/SHADERS/Water.gdshader" id="3_onk0m"]
+[ext_resource type="PackedScene" uid="uid://cyfue54mqw38k" path="res://ART/SCENES/sand_floor.tscn" id="4_2cjb7"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_jaihn"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2cjb7"]
+subdivide_width = 1236
+subdivide_depth = 1236
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jaihn"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jaihn"]
+noise = SubResource("FastNoiseLite_jaihn")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_2cjb7"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2cjb7"]
+noise = SubResource("FastNoiseLite_2cjb7")
+seamless = true
+as_normal_map = true
+bump_strength = 9.9
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_08h73"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_08h73"]
+noise = SubResource("FastNoiseLite_08h73")
+seamless = true
+as_normal_map = true
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_jaihn"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_08h73"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("3_onk0m")
+shader_parameter/primary_color = Vector3(-0.07, 0.4, 0.3)
+shader_parameter/secondary_color = Vector3(0.1, 0.2, 0.8)
+shader_parameter/noise = SubResource("NoiseTexture2D_jaihn")
+shader_parameter/normalmap = SubResource("NoiseTexture2D_2cjb7")
+shader_parameter/normalmap_2 = SubResource("NoiseTexture2D_08h73")
+shader_parameter/screenDistortion = SubResource("ViewportTexture_jaihn")
+shader_parameter/depth_distance = 4.70000007003564
+shader_parameter/beers_law = 17.20000025630064
+shader_parameter/water_transparency = 0.0
+
+[node name="Diorama" type="Node3D" unique_id=34787093]
+
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=1230018374]
+transform = Transform3D(120, 0, 0, 0, 2.272, 0, 0, 0, 86.164, 0.33982277, -4.010296, 20.612307)
+visible = false
+material_override = ExtResource("2_mbyyn")
+mesh = SubResource("BoxMesh_jaihn")
+
+[node name="WaterPlane" type="MeshInstance3D" parent="." unique_id=92569479]
+transform = Transform3D(97.144264, 0, 18.923616, 0, 1.709, 0, -23.451424, 0, 78.38846, 6.2361407, 7.945633, 27.345951)
+mesh = SubResource("PlaneMesh_2cjb7")
+surface_material_override/0 = SubResource("ShaderMaterial_08h73")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=2115883113]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3560305, 11.130899, 8.874711)
+visible = false
+light_energy = 2.32
+omni_range = 15.805499
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1131358506]
+transform = Transform3D(1, 0, 0, 0, -0.4926515, 0.87022674, 0, -0.87022674, -0.4926515, 0, 33.658123, -36.276775)
+light_color = Color(1, 1, 0.8862745, 1)
+sky_mode = 1
+
+[node name="Sandcastle" parent="." unique_id=1472345 instance=ExtResource("3_jaihn")]
+transform = Transform3D(1.57, 0, 0, 0, 1.57, 0, 0, 0, 1.57, -34.946304, 16.389557, -53.875633)
+
+[node name="SandFloor2" parent="." unique_id=707119517 instance=ExtResource("4_2cjb7")]
+transform = Transform3D(56.29735, 0, 12.067046, 0, 14.689999, 0, -29.382765, 0, 23.120447, -35.81831, 6.429229, -59.482513)
+
+[node name="SandFloor3" parent="." unique_id=994630614 instance=ExtResource("4_2cjb7")]
+transform = Transform3D(382.53284, 0, 146.85176, 0, 59.715, 0, -199.65195, 0, 281.36774, -215.06923, -25.678692, -426.79318)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=955728300]
+transform = Transform3D(0.83153737, -0.3200316, 0.45401013, 1.2138447e-08, 0.81734616, 0.5761469, -0.5554686, -0.47908777, 0.6796539, 14.579042, 71.587326, 22.490294)
+fov = 40.0
+far = 230.0

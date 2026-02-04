@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3t0anrchvtx7"]
+
+[ext_resource type="PackedScene" uid="uid://c4gyetk5hkho7" path="res://ART/MESHES/fish.glb" id="1_kn63i"]
+[ext_resource type="Material" uid="uid://cac7jf4pb0pwp" path="res://ART/MATERIALS/M_fish.tres" id="2_2bim7"]
+
+[node name="fish" instance=ExtResource("1_kn63i")]
+
+[node name="Fish" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_2bim7")
