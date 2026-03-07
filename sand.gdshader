@@ -2,16 +2,19 @@ shader_type spatial;
 
 uniform sampler2D heightMap;
 uniform vec3 sandColor;
+uniform vec3 wetSandColor;
 uniform float colorValue;
 
 void vertex() {
-	vec2 texPosition = VERTEX.xz;
+	vec2 texPosition = UV;
 	float height = texture(heightMap, texPosition).z;
-	VERTEX.y = height;
+	VERTEX.y = height*1.5;
+	
 }
 
 void fragment() {
-ALBEDO = texture(heightMap, VERTEX.xz + 0.0).rgb + sandColor - (1.0 - colorValue);
+ALBEDO = texture(heightMap, UV).rgb;
+
 }
 
 //void light() {

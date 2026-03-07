@@ -32,9 +32,9 @@ vec4 refraction(vec2 bumpUV, vec2 screenPos,sampler2D tex0, sampler2D tex1, vec2
 
 void vertex() {
 
-	float offset = 0.5;
-	tex_position = ((VERTEX.xz / 10.0) + 1.15) + (TIME * 0.013);
-	tex_position_2 = ((VERTEX.xz / 10.0) - 1.0) + (TIME * -0.015);
+	float offset = 0.2;
+	tex_position = ((VERTEX.xz / 10.0) + 1.15) + (TIME * 0.0013);
+	tex_position_2 = ((VERTEX.xz / 10.0) - 1.0) + (TIME * -0.0015);
 	float height = texture(noise, tex_position).x + texture(noise, tex_position_2).x + offset;
 	VERTEX.y = height;
 

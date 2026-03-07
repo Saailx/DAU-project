@@ -1,16 +1,14 @@
 [gd_scene format=3 uid="uid://bg3rq5jlmquf7"]
 
-[ext_resource type="Script" uid="uid://dqfmtxx65qld6" path="res://ART/SCENES/sand_interaction.gd" id="1_adobp"]
 [ext_resource type="Material" uid="uid://bggi2das42il2" path="res://ART/MATERIALS/sandShader.tres" id="1_xc6do"]
 [ext_resource type="Script" uid="uid://cduj7041fkq1l" path="res://SCRIPTS/sand_texture.gd" id="2_xc6do"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_xc6do"]
 size = Vector2(30, 30)
-subdivide_width = 512
-subdivide_depth = 512
+subdivide_width = 64
+subdivide_depth = 64
 
 [node name="Node3D" type="Node3D" unique_id=1816009884]
-script = ExtResource("1_adobp")
 
 [node name="Sand" type="MeshInstance3D" parent="." unique_id=1731980959]
 mesh = SubResource("PlaneMesh_xc6do")
@@ -20,8 +18,5 @@ script = ExtResource("2_xc6do")
 [node name="Camera3D" type="Camera3D" parent="." unique_id=642526484]
 transform = Transform3D(1, 0, 0, 0, 0.8646345, 0.50240135, 0, -0.50240135, 0.8646345, 0, 6.0575542, 11.224866)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=46963352]
-transform = Transform3D(1, 0, 0, 0, 0.7945312, 0.6072233, 0, -0.6072233, 0.7945312, 0, 0, 0)
-
-[connection signal="build" from="." to="Sand" method="_on_node_3d_build"]
-[connection signal="dig" from="." to="Sand" method="_on_node_3d_dig"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1525562411]
+transform = Transform3D(1, 0, 0, 0, 0.6709315, 0.74151933, 0, -0.74151933, 0.6709315, 0, 7.2172976, 0)

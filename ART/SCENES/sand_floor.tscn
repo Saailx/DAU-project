@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cyfue54mqw38k"]
+[gd_scene format=3 uid="uid://cyfue54mqw38k"]
 
 [ext_resource type="PackedScene" uid="uid://dvvi3cwjcjc6k" path="res://ART/MESHES/SandFloor.glb" id="1_b8wym"]
 [ext_resource type="Material" uid="uid://cm0snq05t2dp6" path="res://ART/MATERIALS/sand.tres" id="2_qgwqs"]
 
-[node name="SandFloor2" instance=ExtResource("1_b8wym")]
+[node name="SandFloor2" unique_id=466132041 instance=ExtResource("1_b8wym")]
 
 [node name="SandFloor" parent="." index="0"]
 surface_material_override/0 = ExtResource("2_qgwqs")

@@ -3,7 +3,7 @@
 [ext_resource type="Material" uid="uid://cm0snq05t2dp6" path="res://ART/MATERIALS/sand.tres" id="2_mbyyn"]
 [ext_resource type="PackedScene" uid="uid://bvgpkajxt5mnb" path="res://ART/SCENES/sandcastle.tscn" id="3_jaihn"]
 [ext_resource type="Shader" uid="uid://ds42ej1hdnxm8" path="res://ART/SHADERS/Water.gdshader" id="3_onk0m"]
-[ext_resource type="PackedScene" uid="uid://cyfue54mqw38k" path="res://ART/SCENES/sand_floor.tscn" id="4_2cjb7"]
+[ext_resource type="PackedScene" uid="uid://bg3rq5jlmquf7" path="res://ART/SCENES/sand.tscn" id="4_onk0m"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_jaihn"]
 
@@ -48,6 +48,23 @@ shader_parameter/depth_distance = 4.70000007003564
 shader_parameter/beers_law = 17.20000025630064
 shader_parameter/water_transparency = 0.0
 
+[sub_resource type="GDScript" id="GDScript_onk0m"]
+script/source = "extends Node3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_onk0m"]
+size = Vector3(29.644272, 1, 29.808167)
+
 [node name="Diorama" type="Node3D" unique_id=34787093]
 
 [node name="Ground" type="MeshInstance3D" parent="." unique_id=1230018374]
@@ -73,17 +90,21 @@ light_color = Color(1, 1, 0.8862745, 1)
 sky_mode = 1
 
 [node name="Sandcastle" parent="." unique_id=1472345 instance=ExtResource("3_jaihn")]
-transform = Transform3D(1.57, 0, 0, 0, 1.57, 0, 0, 0, 1.57, -34.946304, 16.389557, -53.875633)
-
-[node name="SandFloor2" parent="." unique_id=707119517 instance=ExtResource("4_2cjb7")]
-transform = Transform3D(56.29735, 0, 12.067046, 0, 14.689999, 0, -29.382765, 0, 23.120447, -35.81831, 6.429229, -59.482513)
-
-[node name="SandFloor3" parent="." unique_id=994630614 instance=ExtResource("4_2cjb7")]
-transform = Transform3D(382.53284, 0, 146.85176, 0, 59.715, 0, -199.65195, 0, 281.36774, -215.06923, -25.678692, -426.79318)
+transform = Transform3D(1.57, 0, 0, 0, 1.57, 0, 0, 0, 1.57, 24.194008, 16.389557, 28.07331)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=955728300]
-transform = Transform3D(0.83153737, -0.3200316, 0.45401013, 1.2138447e-08, 0.81734616, 0.5761469, -0.5554686, -0.47908777, 0.6796539, 14.579042, 71.587326, 22.490294)
+transform = Transform3D(0.83153737, -0.3200316, 0.45401013, 1.2138447e-08, 0.81734616, 0.5761469, -0.5554686, -0.47908777, 0.6796539, 54.147648, 61.50449, 81.72456)
 fov = 40.0
 far = 230.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=41449212]
+
+[node name="Node3D" parent="." unique_id=1816009884 instance=ExtResource("4_onk0m")]
+transform = Transform3D(7.757511, 0, 1.9547427, 0, 1, 0, -1.9547427, 0, 7.757511, 2.8404086, 9.80809, 19.936699)
+script = SubResource("GDScript_onk0m")
+
+[node name="Area3D" type="Area3D" parent="Node3D" unique_id=1512762582]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Area3D" unique_id=1390066610]
+transform = Transform3D(1.0000076, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000076, -0.003548205, 0, -0.12100196)
+shape = SubResource("BoxShape3D_onk0m")
