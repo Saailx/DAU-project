@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://bggi2das42il2"]
 
-[ext_resource type="Shader" uid="uid://btar1t0i0fy0b" path="res://sand.gdshader" id="1_uiw7m"]
+[ext_resource type="Shader" uid="uid://btar1t0i0fy0b" path="res://ART/SHADERS/sand.gdshader" id="1_uiw7m"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_uiw7m"]
 
@@ -8,6 +8,6 @@
 render_priority = 0
 shader = ExtResource("1_uiw7m")
 shader_parameter/heightMap = SubResource("NoiseTexture2D_uiw7m")
-shader_parameter/sandColor = Vector3(1, 0.96, 0.5)
-shader_parameter/wetSandColor = Vector3(0.8, 0.92, 0.13)
+shader_parameter/sandColor = Vector3(1, 0.96, 0.3)
+shader_parameter/wetSandColor = Vector3(0.99, 0.6, 0.01)
 shader_parameter/colorValue = 1.0

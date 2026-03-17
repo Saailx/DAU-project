@@ -1,9 +1,28 @@
 [gd_scene format=3 uid="uid://cgq40b18astma"]
 
+[ext_resource type="Script" uid="uid://bhgynq1aohoxe" path="res://LEVELS/VISUAL/diorama.gd" id="1_2cjb7"]
 [ext_resource type="Material" uid="uid://cm0snq05t2dp6" path="res://ART/MATERIALS/sand.tres" id="2_mbyyn"]
 [ext_resource type="PackedScene" uid="uid://bvgpkajxt5mnb" path="res://ART/SCENES/sandcastle.tscn" id="3_jaihn"]
 [ext_resource type="Shader" uid="uid://ds42ej1hdnxm8" path="res://ART/SHADERS/Water.gdshader" id="3_onk0m"]
 [ext_resource type="PackedScene" uid="uid://bg3rq5jlmquf7" path="res://ART/SCENES/sand.tscn" id="4_onk0m"]
+[ext_resource type="Script" uid="uid://bp3iab0defait" path="res://ART/SCENES/sand.gd" id="6_08h73"]
+[ext_resource type="Material" uid="uid://bggi2das42il2" path="res://ART/MATERIALS/sandShader.tres" id="7_ega6y"]
+[ext_resource type="Script" uid="uid://cduj7041fkq1l" path="res://SCRIPTS/sand_texture.gd" id="8_pa1m1"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ega6y"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_pa1m1"]
+sky_material = SubResource("ProceduralSkyMaterial_ega6y")
+
+[sub_resource type="Environment" id="Environment_iv766"]
+background_mode = 2
+sky = SubResource("Sky_pa1m1")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_75gg8"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_jaihn"]
 
@@ -48,24 +67,20 @@ shader_parameter/depth_distance = 4.70000007003564
 shader_parameter/beers_law = 17.20000025630064
 shader_parameter/water_transparency = 0.0
 
-[sub_resource type="GDScript" id="GDScript_onk0m"]
-script/source = "extends Node3D
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-"
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_onk0m"]
 size = Vector3(29.644272, 1, 29.808167)
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_iv766"]
+size = Vector2(30, 30)
+subdivide_width = 512
+subdivide_depth = 512
+
 [node name="Diorama" type="Node3D" unique_id=34787093]
+script = ExtResource("1_2cjb7")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1312024083]
+environment = SubResource("Environment_iv766")
+camera_attributes = SubResource("CameraAttributesPhysical_75gg8")
 
 [node name="Ground" type="MeshInstance3D" parent="." unique_id=1230018374]
 transform = Transform3D(120, 0, 0, 0, 2.272, 0, 0, 0, 86.164, 0.33982277, -4.010296, 20.612307)
@@ -74,37 +89,38 @@ material_override = ExtResource("2_mbyyn")
 mesh = SubResource("BoxMesh_jaihn")
 
 [node name="WaterPlane" type="MeshInstance3D" parent="." unique_id=92569479]
-transform = Transform3D(97.144264, 0, 18.923616, 0, 1.709, 0, -23.451424, 0, 78.38846, 6.2361407, 7.945633, 27.345951)
+transform = Transform3D(15, 0, 0, 0, 1.709, 0, 0, 0, 15, 0, -1.6333351, 0)
 mesh = SubResource("PlaneMesh_2cjb7")
 surface_material_override/0 = SubResource("ShaderMaterial_08h73")
-
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=2115883113]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3560305, 11.130899, 8.874711)
-visible = false
-light_energy = 2.32
-omni_range = 15.805499
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1131358506]
 transform = Transform3D(1, 0, 0, 0, -0.4926515, 0.87022674, 0, -0.87022674, -0.4926515, 0, 33.658123, -36.276775)
 light_color = Color(1, 1, 0.8862745, 1)
-sky_mode = 1
 
 [node name="Sandcastle" parent="." unique_id=1472345 instance=ExtResource("3_jaihn")]
-transform = Transform3D(1.57, 0, 0, 0, 1.57, 0, 0, 0, 1.57, 24.194008, 16.389557, 28.07331)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6023335, 0)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=955728300]
-transform = Transform3D(0.83153737, -0.3200316, 0.45401013, 1.2138447e-08, 0.81734616, 0.5761469, -0.5554686, -0.47908777, 0.6796539, 54.147648, 61.50449, 81.72456)
+transform = Transform3D(0.83153737, -0.3200316, 0.45401013, 1.2138447e-08, 0.81734616, 0.5761469, -0.5554686, -0.47908777, 0.6796539, 15.361075, 18.103127, 23.660994)
 fov = 40.0
 far = 230.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=41449212]
 
-[node name="Node3D" parent="." unique_id=1816009884 instance=ExtResource("4_onk0m")]
-transform = Transform3D(7.757511, 0, 1.9547427, 0, 1, 0, -1.9547427, 0, 7.757511, 2.8404086, 9.80809, 19.936699)
-script = SubResource("GDScript_onk0m")
+[node name="Sand" parent="." unique_id=1816009884 instance=ExtResource("4_onk0m")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
+script = ExtResource("6_08h73")
 
-[node name="Area3D" type="Area3D" parent="Node3D" unique_id=1512762582]
+[node name="Area3D" type="Area3D" parent="Sand" unique_id=1512762582]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Area3D" unique_id=1390066610]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sand/Area3D" unique_id=1390066610]
 transform = Transform3D(1.0000076, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0, 1.0000076, -0.003548205, 0, -0.12100196)
 shape = SubResource("BoxShape3D_onk0m")
+
+[node name="Sand2" type="MeshInstance3D" parent="Sand" unique_id=1568710343]
+mesh = SubResource("PlaneMesh_iv766")
+surface_material_override/0 = ExtResource("7_ega6y")
+script = ExtResource("8_pa1m1")
+
+[connection signal="build" from="." to="Sand/Sand2" method="_on_diorama_build"]
+[connection signal="dig" from="." to="Sand/Sand2" method="_on_diorama_dig"]

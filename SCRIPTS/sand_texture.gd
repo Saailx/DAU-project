@@ -1,6 +1,7 @@
 extends MeshInstance3D
 
 const RAY_LENGTH = 1000
+var mouse_world_pos : Vector2
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	createImage(64,true)
@@ -21,7 +22,9 @@ func _physics_process(delta: float) -> void:
 	query.collide_with_areas = true
 	var result = space_state.intersect_ray(query)
 	if result :
-		print("implemente le clic")
+		mouse_world_pos.x = result.position.x
+		mouse_world_pos.y = result.position.z
+		#print(mouse_world_pos)
 
 func shuffle(array):
 	for j in range(len(array)-1, 0, -1):
@@ -109,7 +112,6 @@ func adjustNoise(x, y, octaves):#using Fractal Brownian Motion (FBM)
 	
 	return result
 	
-	
 
 func createImage(size = 64, mipmap = true):
 	var img = Image.create_empty(size,size,mipmap, Image.FORMAT_RGBA8);
@@ -117,7 +119,7 @@ func createImage(size = 64, mipmap = true):
 	
 	for i in range(size) :
 		for j in range(size) :
-			var color = adjustNoise(i, j, 3)
+			var color = adjustNoise(i, j, octaves)
 			img.set_pixel(i, j, Color(color, color, color, color))
 	
 	var tex = ImageTexture.create_from_image(img)
@@ -126,13 +128,34 @@ func createImage(size = 64, mipmap = true):
 	mat.set_shader_parameter("heightMap", tex)
 	
 
-func modifyLocalValues(pos, img, value):
-	img.set_pixel(pos.x, pos.y, value) 
+func modifyLocalValues(pos : Vector2, img : ImageTexture, value : float):
+	var currentMesh = get_node(".")
+	var mat = currentMesh.get_active_material(0) as ShaderMaterial
+	var tex = mat.get_shader_parameter("heightMap")
+	var img_to_edit = img.get_image()
+	img_to_edit.set_pixel(int(pos.x), int(pos.y), Color(value, value, value, value))
+	img.update(img_to_edit)
+	
 
-func _on_node_3d_build() -> void:
-	print("build")
-	##modifyLocalValues()
+
+func meshCoordToGridUv(coord : Vector2):
+	var meshSizeX = self.mesh.get_aabb().size.x
+	var meshSizeZ = self.mesh.get_aabb().size.z
+	var meshSize = Vector2(meshSizeX, meshSizeZ)
+	return (0.5*meshSize + coord)/meshSize
+
+func _on_diorama_build() -> void:
+	var mat = get_node(".").get_active_material(0) as ShaderMaterial
+	var image = mat.get_shader_parameter("heightMap")
+	var pos_on_texture : Vector2
+	pos_on_texture = meshCoordToGridUv(mouse_world_pos)*64
+	modifyLocalValues(pos_on_texture, image, 1)
+	
 
 
-func _on_node_3d_dig() -> void:
-	print("dig")
+func _on_diorama_dig() -> void:
+	var mat = get_node(".").get_active_material(0) as ShaderMaterial
+	var image = mat.get_shader_parameter("heightMap")
+	var pos_on_texture : Vector2
+	pos_on_texture = meshCoordToGridUv(mouse_world_pos)*64
+	modifyLocalValues(pos_on_texture, image, 0)

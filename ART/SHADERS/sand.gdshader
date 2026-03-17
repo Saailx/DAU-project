@@ -13,7 +13,7 @@ void vertex() {
 }
 
 void fragment() {
-ALBEDO = texture(heightMap, UV).rgb;
+ALBEDO = mix(wetSandColor, sandColor, texture(heightMap, UV).rgb);
 
 }
 
