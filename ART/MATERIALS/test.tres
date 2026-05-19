@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cei5eodhdgp4k"]
+
+[ext_resource type="Shader" uid="uid://cng3s48olao1c" path="res://ART/SHADERS/test.gdshader" id="1_yvp8w"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yvp8w"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_yvp8w")
+shader_parameter/flowMap = SubResource("NoiseTexture2D_yvp8w")
+shader_parameter/color = Vector3(1, 0, 0)

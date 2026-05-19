@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://ds42ej1hdnxm8" path="res://ART/SHADERS/Water.gdshader" id="3_onk0m"]
 [ext_resource type="PackedScene" uid="uid://bg3rq5jlmquf7" path="res://ART/SCENES/sand.tscn" id="4_onk0m"]
 [ext_resource type="Shader" uid="uid://cng3s48olao1c" path="res://ART/SHADERS/test.gdshader" id="4_pa1m1"]
+[ext_resource type="Script" uid="uid://bp3iab0defait" path="res://ART/SCENES/sand.gd" id="6_08h73"]
 [ext_resource type="Material" uid="uid://bggi2das42il2" path="res://ART/MATERIALS/sandShader.tres" id="7_ega6y"]
 [ext_resource type="Script" uid="uid://cduj7041fkq1l" path="res://SCRIPTS/sand_texture.gd" id="8_pa1m1"]
 
@@ -29,6 +30,8 @@ glow_enabled = true
 [sub_resource type="PlaneMesh" id="PlaneMesh_2cjb7"]
 subdivide_width = 1024
 subdivide_depth = 1024
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_iv766"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_jaihn"]
 
@@ -62,6 +65,7 @@ shader_parameter/secondary_color = Vector3(0.1, 0.2, 0.8)
 shader_parameter/noise = SubResource("NoiseTexture2D_jaihn")
 shader_parameter/normalmap = SubResource("NoiseTexture2D_2cjb7")
 shader_parameter/normalmap_2 = SubResource("NoiseTexture2D_08h73")
+shader_parameter/flow_map = SubResource("NoiseTexture2D_iv766")
 shader_parameter/screenDistortion = SubResource("ViewportTexture_jaihn")
 shader_parameter/depth_distance = 4.70000007003564
 shader_parameter/beers_law = 17.20000025630064
@@ -114,7 +118,6 @@ light_color = Color(1, 1, 0.8862745, 1)
 
 [node name="Sandcastle" parent="." unique_id=1472345 instance=ExtResource("3_jaihn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6023335, 0)
-visible = false
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=955728300]
 transform = Transform3D(0.83153737, -0.3200316, 0.45401013, 1.2138447e-08, 0.81734616, 0.5761469, -0.5554686, -0.47908777, 0.6796539, 15.361075, 18.103127, 23.660994)
@@ -122,11 +125,10 @@ fov = 40.0
 far = 230.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=41449212]
-visible = false
 
 [node name="Sand" parent="." unique_id=1816009884 instance=ExtResource("4_onk0m")]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
-script = null
+script = ExtResource("6_08h73")
 
 [node name="Area3D" type="Area3D" parent="Sand" unique_id=1512762582]
 
@@ -138,7 +140,3 @@ shape = SubResource("BoxShape3D_onk0m")
 mesh = SubResource("PlaneMesh_iv766")
 surface_material_override/0 = ExtResource("7_ega6y")
 script = ExtResource("8_pa1m1")
-
-[connection signal="build" from="." to="Sand/Sand2" method="_on_diorama_build"]
-[connection signal="dig" from="." to="Sand/Sand2" method="_on_diorama_dig"]
-[connection signal="released" from="." to="Sand/Sand2" method="_on_diorama_released"]

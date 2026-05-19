@@ -122,10 +122,10 @@ fov = 40.0
 far = 230.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=41449212]
-visible = false
 
 [node name="Sand" parent="." unique_id=1816009884 instance=ExtResource("4_onk0m")]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
+visible = false
 script = null
 
 [node name="Area3D" type="Area3D" parent="Sand" unique_id=1512762582]
@@ -141,4 +141,3 @@ script = ExtResource("8_pa1m1")
 
 [connection signal="build" from="." to="Sand/Sand2" method="_on_diorama_build"]
 [connection signal="dig" from="." to="Sand/Sand2" method="_on_diorama_dig"]
-[connection signal="released" from="." to="Sand/Sand2" method="_on_diorama_released"]

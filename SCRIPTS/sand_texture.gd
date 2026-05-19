@@ -2,6 +2,11 @@ extends MeshInstance3D
 
 const RAY_LENGTH = 1000
 var mouse_world_pos : Vector2
+var heightMapCPU : PackedFloat32Array
+var flowMapCPU: PackedFloat32Array
+var building = false
+var digging = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	createImage(64,true)
@@ -9,7 +14,19 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	pass
+	if building : 
+		var mat = get_node(".").get_active_material(0) as ShaderMaterial
+		var image = mat.get_shader_parameter("heightMap")
+		var pos_on_texture : Vector2
+		pos_on_texture = meshCoordToGridUv(mouse_world_pos)*64
+		modifyLocalValues(pos_on_texture, image, 0.1)
+	if digging : 
+		var mat = get_node(".").get_active_material(0) as ShaderMaterial
+		var image = mat.get_shader_parameter("heightMap")
+		var pos_on_texture : Vector2
+		pos_on_texture = meshCoordToGridUv(mouse_world_pos)*64
+		modifyLocalValues(pos_on_texture, image, -0.4)
+		
 
 func _physics_process(delta: float) -> void:
 	var space_state = get_world_3d().direct_space_state
@@ -114,9 +131,8 @@ func adjustNoise(x, y, octaves):#using Fractal Brownian Motion (FBM)
 	
 
 func createImage(size = 64, mipmap = true):
-	var img = Image.create_empty(size,size,mipmap, Image.FORMAT_RGBA8);
+	var img = Image.create_empty(size,size,mipmap, Image.FORMAT_RGBA8)
 	var octaves = 3
-	
 	for i in range(size) :
 		for j in range(size) :
 			var color = adjustNoise(i, j, octaves)
@@ -129,11 +145,9 @@ func createImage(size = 64, mipmap = true):
 	
 
 func modifyLocalValues(pos : Vector2, img : ImageTexture, value : float):
-	var currentMesh = get_node(".")
-	var mat = currentMesh.get_active_material(0) as ShaderMaterial
-	var tex = mat.get_shader_parameter("heightMap")
 	var img_to_edit = img.get_image()
-	img_to_edit.set_pixel(int(pos.x), int(pos.y), Color(value, value, value, value))
+	var current_color = img.get_image().get_pixel(pos.x, pos.y).r
+	img_to_edit.set_pixel(int(pos.x), int(pos.y), Color(current_color + value, current_color + value, current_color + value))
 	img.update(img_to_edit)
 	
 
@@ -145,17 +159,14 @@ func meshCoordToGridUv(coord : Vector2):
 	return (0.5*meshSize + coord)/meshSize
 
 func _on_diorama_build() -> void:
-	var mat = get_node(".").get_active_material(0) as ShaderMaterial
-	var image = mat.get_shader_parameter("heightMap")
-	var pos_on_texture : Vector2
-	pos_on_texture = meshCoordToGridUv(mouse_world_pos)*64
-	modifyLocalValues(pos_on_texture, image, 1)
+	building = true
 	
 
 
 func _on_diorama_dig() -> void:
-	var mat = get_node(".").get_active_material(0) as ShaderMaterial
-	var image = mat.get_shader_parameter("heightMap")
-	var pos_on_texture : Vector2
-	pos_on_texture = meshCoordToGridUv(mouse_world_pos)*64
-	modifyLocalValues(pos_on_texture, image, 0)
+	digging = true
+
+
+func _on_diorama_released() -> void:
+	building = false
+	digging = false

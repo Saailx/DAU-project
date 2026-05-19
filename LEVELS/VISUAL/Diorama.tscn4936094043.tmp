@@ -1,11 +1,13 @@
 [gd_scene format=3 uid="uid://cgq40b18astma"]
 
-[ext_resource type="Script" uid="uid://diaxjut3rslkw" path="res://SCRIPTS/new_water.gd" id="1_iv766"]
+[ext_resource type="Script" uid="uid://bhgynq1aohoxe" path="res://LEVELS/VISUAL/diorama.gd" id="1_2cjb7"]
 [ext_resource type="Material" uid="uid://cm0snq05t2dp6" path="res://ART/MATERIALS/sand.tres" id="2_mbyyn"]
 [ext_resource type="PackedScene" uid="uid://bvgpkajxt5mnb" path="res://ART/SCENES/sandcastle.tscn" id="3_jaihn"]
 [ext_resource type="Shader" uid="uid://ds42ej1hdnxm8" path="res://ART/SHADERS/Water.gdshader" id="3_onk0m"]
 [ext_resource type="PackedScene" uid="uid://bg3rq5jlmquf7" path="res://ART/SCENES/sand.tscn" id="4_onk0m"]
 [ext_resource type="Shader" uid="uid://cng3s48olao1c" path="res://ART/SHADERS/test.gdshader" id="4_pa1m1"]
+[ext_resource type="Script" uid="uid://f630as5if2d2" path="res://SCRIPTS/Water_Physics.gd" id="5_iv766"]
+[ext_resource type="Script" uid="uid://bp3iab0defait" path="res://ART/SCENES/sand.gd" id="6_08h73"]
 [ext_resource type="Material" uid="uid://bggi2das42il2" path="res://ART/MATERIALS/sandShader.tres" id="7_ega6y"]
 [ext_resource type="Script" uid="uid://cduj7041fkq1l" path="res://SCRIPTS/sand_texture.gd" id="8_pa1m1"]
 
@@ -85,7 +87,7 @@ subdivide_width = 512
 subdivide_depth = 512
 
 [node name="Diorama" type="Node3D" unique_id=34787093]
-script = ExtResource("1_iv766")
+script = ExtResource("1_2cjb7")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1312024083]
 environment = SubResource("Environment_iv766")
@@ -104,9 +106,9 @@ surface_material_override/0 = SubResource("ShaderMaterial_08h73")
 
 [node name="WaterPlane2" type="MeshInstance3D" parent="." unique_id=1581084080]
 transform = Transform3D(15, 0, 0, 0, 1.709, 0, 0, 0, 15, 0, 6.9723797, 0)
-visible = false
 mesh = SubResource("PlaneMesh_2cjb7")
 surface_material_override/0 = SubResource("ShaderMaterial_iv766")
+script = ExtResource("5_iv766")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1131358506]
 transform = Transform3D(1, 0, 0, 0, -0.4926515, 0.87022674, 0, -0.87022674, -0.4926515, 0, 33.658123, -36.276775)
@@ -114,7 +116,6 @@ light_color = Color(1, 1, 0.8862745, 1)
 
 [node name="Sandcastle" parent="." unique_id=1472345 instance=ExtResource("3_jaihn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6023335, 0)
-visible = false
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=955728300]
 transform = Transform3D(0.83153737, -0.3200316, 0.45401013, 1.2138447e-08, 0.81734616, 0.5761469, -0.5554686, -0.47908777, 0.6796539, 15.361075, 18.103127, 23.660994)
@@ -122,11 +123,10 @@ fov = 40.0
 far = 230.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=41449212]
-visible = false
 
 [node name="Sand" parent="." unique_id=1816009884 instance=ExtResource("4_onk0m")]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
-script = null
+script = ExtResource("6_08h73")
 
 [node name="Area3D" type="Area3D" parent="Sand" unique_id=1512762582]
 
@@ -141,4 +141,3 @@ script = ExtResource("8_pa1m1")
 
 [connection signal="build" from="." to="Sand/Sand2" method="_on_diorama_build"]
 [connection signal="dig" from="." to="Sand/Sand2" method="_on_diorama_dig"]
-[connection signal="released" from="." to="Sand/Sand2" method="_on_diorama_released"]
