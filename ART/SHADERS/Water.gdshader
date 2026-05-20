@@ -39,6 +39,8 @@ vec2 remapUV01(vec2 uv, vec2 a, vec2 b){
 	return vec2(remap01(uv.x, a.x, b.x), remap01(uv.y, a.y, b.y));
 }
 
+varying vec3 heightmapNormal;
+
 void vertex() {
 
 	//float offset = 0.2;
@@ -48,7 +50,12 @@ void vertex() {
 	vec2 uvHeightmap = remapUV01(UV, vec2(0./32.), vec2(34.8/32.));
 	float terrainHeight = texture(terrainHeightmap, uvHeightmap).x;
 	float height = texture(heightmap, uvHeightmap).x; //reprendre calculs du fragment (remap)
-	VERTEX.y += terrainHeight + height - 0.001;
+	VERTEX.y += terrainHeight + height - 0.0001;
+	heightmapNormal = normalize(vec3(
+		(texture(heightmap, uvHeightmap - vec2(0.01, 0.)).r - texture(heightmap, uvHeightmap + vec2(0.01, 0.)).r)/0.02, 
+		1.,
+		(texture(heightmap, uvHeightmap - vec2(0.0, 0.01)).r - texture(heightmap, uvHeightmap + vec2(0.0, 0.01)).r)/0.02
+	));
 
 
 }
@@ -71,7 +78,7 @@ void fragment() {
 
 	ROUGHNESS = 0.0;
 	
-	NORMAL_MAP = normalize(texture(normalmap, tex_position).xyz + texture(normalmap_2, tex_position_2).xyz);
+	NORMAL_MAP = normalize(heightmapNormal + texture(normalmap, tex_position).xyz + texture(normalmap_2, tex_position_2).xyz);
 	// REFRACTION
 
 	distortionScale.x = 0.05;
@@ -92,6 +99,7 @@ void fragment() {
 	// Faire variables + récupérer tangente pour convertir en view_space (pour le fresnel puis la couleur)
 	// Sampler une cubemap pour des reflections
 	ALBEDO.rgb = mix(primary_color * refractedAlbedo, final_color, fresnel);
+	
 	//vec2 uvHM = vec2(1.-UV.x, 1.-UV.y);
 	//vec2 uvOffset = remapUV01(UV, vec2(0./32.), vec2(34.8/32.));
 	//ALBEDO.rgb = texture(heightmap, uvOffset).rgb;

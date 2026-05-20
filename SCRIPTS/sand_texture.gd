@@ -7,9 +7,11 @@ var flowMapCPU: PackedFloat32Array
 var building = false
 var digging = false
 
+@export var sim : SIMWATER
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	createImage(64,true)
+	createImage(32,false)
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -17,14 +19,14 @@ func _process(_delta: float) -> void:
 	if building : 
 		var mat = get_node(".").get_active_material(0) as ShaderMaterial
 		var image = mat.get_shader_parameter("heightMap")
-		var pos_on_texture : Vector2
-		pos_on_texture = meshCoordToGridUv(mouse_world_pos)*64
+		var pos_on_texture : Vector2i
+		pos_on_texture = meshCoordToGridUv(mouse_world_pos)*32
 		modifyLocalValues(pos_on_texture, image, 0.1)
 	if digging : 
 		var mat = get_node(".").get_active_material(0) as ShaderMaterial
 		var image = mat.get_shader_parameter("heightMap")
-		var pos_on_texture : Vector2
-		pos_on_texture = meshCoordToGridUv(mouse_world_pos)*64
+		var pos_on_texture : Vector2i
+		pos_on_texture = meshCoordToGridUv(mouse_world_pos)*32
 		modifyLocalValues(pos_on_texture, image, -0.4)
 		
 
@@ -130,8 +132,8 @@ func adjustNoise(x, y, octaves):#using Fractal Brownian Motion (FBM)
 	return result
 	
 
-func createImage(size = 64, mipmap = true):
-	var img = Image.create_empty(size,size,mipmap, Image.FORMAT_RGBA8)
+func createImage(size, mipmap = false):
+	var img = Image.create_empty(size,size,mipmap, Image.FORMAT_RF)
 	var octaves = 3
 	for i in range(size) :
 		for j in range(size) :
@@ -144,11 +146,12 @@ func createImage(size = 64, mipmap = true):
 	mat.set_shader_parameter("heightMap", tex)
 	
 
-func modifyLocalValues(pos : Vector2, img : ImageTexture, value : float):
+func modifyLocalValues(pos : Vector2i, img : ImageTexture, value : float):
 	var img_to_edit = img.get_image()
-	var current_color = img.get_image().get_pixel(pos.x, pos.y).r
-	img_to_edit.set_pixel(int(pos.x), int(pos.y), Color(current_color + value, current_color + value, current_color + value))
+	var current_color = clamp(img.get_image().get_pixel(pos.x, pos.y).r + value, 0.0, 10.0)
+	img_to_edit.set_pixel(int(pos.x), int(pos.y), Color(current_color,current_color,current_color))
 	img.update(img_to_edit)
+	updateTerrainHeight(img)
 	
 
 
@@ -158,15 +161,20 @@ func meshCoordToGridUv(coord : Vector2):
 	var meshSize = Vector2(meshSizeX, meshSizeZ)
 	return (0.5*meshSize + coord)/meshSize
 
-func _on_diorama_build() -> void:
-	building = true
+func updateTerrainHeight(tex: ImageTexture):
+	#sim.terrainHeightMap = tex.get_image().get_data().to_float32_array()
+	var data : PackedFloat32Array = tex.get_image().get_data().to_float32_array()
+	sim.terrainHeightMap = data
+
+func _on_node_released() -> void:
+	building = false
+	digging = false
 	
 
 
-func _on_diorama_dig() -> void:
+func _on_node_build() -> void:
+	building = true
+
+
+func _on_node_dig() -> void:
 	digging = true
-
-
-func _on_diorama_released() -> void:
-	building = false
-	digging = false

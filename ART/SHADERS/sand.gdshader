@@ -7,13 +7,13 @@ uniform float colorValue;
 
 void vertex() {
 	vec2 texPosition = UV;
-	float height = texture(heightMap, texPosition).z;
+	float height = texture(heightMap, texPosition).r;
 	VERTEX.y = height*1.5;
 	
 }
 
 void fragment() {
-ALBEDO =  mix(sandColor, wetSandColor, texture(heightMap, UV).rgb) ;
+ALBEDO =  mix(sandColor, wetSandColor, clamp(texture(heightMap, UV).r, 0.0, 1.0)) ;
 
 }
 

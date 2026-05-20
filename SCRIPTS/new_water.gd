@@ -1,14 +1,17 @@
-extends Node3D
+extends Node
+
+class_name SIMWATER
 
 var terrainHeightMap := [] #float
 var waterHeightMap := [] #float
 var flowMap :Array[Vector2] #Vec2
+
 var textureWidth = 32
 var g = 10.0
-var dt = 0.009
+var dt = 0.016
 var dx = 1.0
 var dy = 1.0
-var friction = 0.02
+var friction = 0.15
 var frictionFactor = pow(1.0-friction,dt)
 var waterHeightTexture : Image
 var terrainHeightTexture : Image
@@ -20,7 +23,11 @@ signal released
 var mouse_down_pos = 0.0
 var mouse_down_time = 0
 
-@onready var material = $WaterPlane.get_active_material(0) 
+@onready var material = $"../WaterPlane".get_active_material(0) 
+@onready var terrainMat = $"../Sand/Sand2".get_active_material(0) as ShaderMaterial
+@onready var terrainTex = terrainMat.get_shader_parameter("heightMap")
+
+
 
 func get_array_coordinates(x : int, y : int, arraySize : int):
 	return y * arraySize + x
@@ -30,6 +37,7 @@ func _ready() -> void:
 	terrainHeightMap.resize(textureWidth*textureWidth)
 	waterHeightMap.resize(textureWidth*textureWidth)
 	flowMap.resize(textureWidth*textureWidth)
+	
 	#init bounds
 	for i in range(textureWidth):
 		flowMap[i * textureWidth].x = 1.0
@@ -42,7 +50,7 @@ func _ready() -> void:
 		for j in range(textureWidth):
 			var center = Vector2(textureWidth/2, textureWidth/2)
 			var pt = Vector2(i, j)
-			terrainHeightMap[j*textureWidth+i] = max(0.0, 1.0-(pt-center).length()/(0.5*textureWidth))
+			terrainHeightMap[j*textureWidth+i] = max(0.0, 1.0-(pt-center).length())
 			#bind terrain texture in shader and offset UVs as in shader
 	waterHeightMap.fill(0.0)
 	var water_bytes = PackedFloat32Array(self.waterHeightMap).to_byte_array()
@@ -53,15 +61,22 @@ func _ready() -> void:
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	
 	#set X and Y water flows
 	for y in range (textureWidth):
-		for x in range (textureWidth):
-			flowMap[get_array_coordinates(x, y, textureWidth)].x = flowMap[get_array_coordinates(x, y, textureWidth)].x  * frictionFactor + (waterHeightMap[get_array_coordinates(x-1, y, textureWidth)] + terrainHeightMap[get_array_coordinates(x-1, y, textureWidth)]- waterHeightMap[get_array_coordinates(x, y, textureWidth)] - terrainHeightMap[get_array_coordinates(x, y, textureWidth)]) * g * dt / dx
-			flowMap[get_array_coordinates(x, y, textureWidth)].y = flowMap[get_array_coordinates(x, y, textureWidth)].y  * frictionFactor + (waterHeightMap[get_array_coordinates(x-1, y, textureWidth)] + terrainHeightMap[get_array_coordinates(x-1, y, textureWidth)]- waterHeightMap[get_array_coordinates(x, y, textureWidth)] - terrainHeightMap[get_array_coordinates(x, y, textureWidth)]) * g * dt / dx
-	for y in range(textureWidth):
+		for x in range (1,textureWidth):
+			var terrainHeightCurrent : float = terrainHeightMap[get_array_coordinates(x, y, textureWidth)]
+			var waterHeightCurrent : float = waterHeightMap[get_array_coordinates(x, y, textureWidth)]
+			#terrainHeightMap[x*textureWidth+y] = terrainTex.get_image().get_pixel(x, y).r
+			flowMap[get_array_coordinates(x, y, textureWidth)].x = flowMap[get_array_coordinates(x, y, textureWidth)].x  * frictionFactor + (waterHeightMap[get_array_coordinates(x-1, y, textureWidth)] + max(0, terrainHeightMap[get_array_coordinates(x-1, y, textureWidth)])- waterHeightCurrent - max(0, terrainHeightCurrent)) * g * dt / dx
+			#flowMap[get_array_coordinates(x, y, textureWidth)].y = flowMap[get_array_coordinates(x, y, textureWidth)].y  * frictionFactor + (waterHeightMap[get_array_coordinates(x-1, y, textureWidth)] + max(0, terrainHeightMap[get_array_coordinates(x-1, y, textureWidth)])- waterHeightCurrent - max(0, terrainHeightCurrent)) * g * dt / dx
+	for y in range(1,textureWidth):
 		for x in range(textureWidth):
-			flowMap[get_array_coordinates(x, y, textureWidth)].x = flowMap[get_array_coordinates(x, y, textureWidth)].x  * frictionFactor + (waterHeightMap[get_array_coordinates(x, y-1, textureWidth)] + terrainHeightMap[get_array_coordinates(x, y-1, textureWidth)]- waterHeightMap[get_array_coordinates(x, y, textureWidth)] - terrainHeightMap[get_array_coordinates(x, y, textureWidth)]) * g * dt / dy
-			flowMap[get_array_coordinates(x, y, textureWidth)].y = flowMap[get_array_coordinates(x, y, textureWidth)].y  * frictionFactor + (waterHeightMap[get_array_coordinates(x, y-1, textureWidth)] + terrainHeightMap[get_array_coordinates(x, y-1, textureWidth)]- waterHeightMap[get_array_coordinates(x, y, textureWidth)] - terrainHeightMap[get_array_coordinates(x, y, textureWidth)]) * g * dt / dy
+			var terrainHeightCurrent : float = terrainHeightMap[get_array_coordinates(x, y, textureWidth)]
+			var waterHeightCurrent : float = waterHeightMap[get_array_coordinates(x, y, textureWidth)]
+			#terrainHeightMap[x*textureWidth+y] = terrainTex.get_image().get_pixel(x, y).r
+			#flowMap[get_array_coordinates(x, y, textureWidth)].x = flowMap[get_array_coordinates(x, y, textureWidth)].x  * frictionFactor + (waterHeightMap[get_array_coordinates(x, y-1, textureWidth)] + max(0, terrainHeightMap[get_array_coordinates(x, y-1, textureWidth)])- waterHeightCurrent - max(0, terrainHeightCurrent)) * g * dt / dy
+			flowMap[get_array_coordinates(x, y, textureWidth)].y = flowMap[get_array_coordinates(x, y, textureWidth)].y  * frictionFactor + (waterHeightMap[get_array_coordinates(x, y-1, textureWidth)] + max(0, terrainHeightMap[get_array_coordinates(x, y-1, textureWidth)])- waterHeightCurrent - max(0, terrainHeightCurrent)) * g * dt / dy
 			
 	#prevent negative or created amounts of water
 	for y in range(0, textureWidth-1):
@@ -93,7 +108,7 @@ func _process(delta: float) -> void:
 	for y in range(textureWidth-1):
 		for x in range(textureWidth-1):
 			waterHeightMap[get_array_coordinates(x, y, textureWidth)] += dt/dx/dy * (flowMap[get_array_coordinates(x, y, textureWidth)].x + flowMap[get_array_coordinates(x, y, textureWidth)].y - flowMap[get_array_coordinates(x+1, y, textureWidth)].x - flowMap[get_array_coordinates(x, y+1, textureWidth)].y)
-			
+			waterHeightMap[get_array_coordinates(x, y, textureWidth)] = clamp(waterHeightMap[get_array_coordinates(x, y, textureWidth)], 0.0, 10.0)
 	waterHeightTexture = Image.create_from_data(textureWidth, textureWidth , false, Image.FORMAT_RF, PackedFloat32Array(waterHeightMap).to_byte_array())
 	self.simTexture.update(self.waterHeightTexture)
 	material.set_shader_parameter("heightmap", self.simTexture)

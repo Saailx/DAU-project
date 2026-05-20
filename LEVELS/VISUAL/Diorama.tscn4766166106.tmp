@@ -137,11 +137,11 @@ shape = SubResource("BoxShape3D_onk0m")
 mesh = SubResource("PlaneMesh_iv766")
 surface_material_override/0 = ExtResource("7_ega6y")
 script = ExtResource("8_pa1m1")
-sim = NodePath("../../watersimScript")
+sim = NodePath("../../Node")
 
-[node name="watersimScript" type="Node" parent="." unique_id=286761744]
+[node name="Node" type="Node" parent="." unique_id=286761744]
 script = ExtResource("1_iv766")
 
-[connection signal="build" from="watersimScript" to="Sand/Sand2" method="_on_node_build"]
-[connection signal="dig" from="watersimScript" to="Sand/Sand2" method="_on_node_dig"]
-[connection signal="released" from="watersimScript" to="Sand/Sand2" method="_on_node_released"]
+[connection signal="build" from="Node" to="Sand/Sand2" method="_on_node_build"]
+[connection signal="dig" from="Node" to="Sand/Sand2" method="_on_node_dig"]
+[connection signal="released" from="Node" to="Sand/Sand2" method="_on_node_released"]
