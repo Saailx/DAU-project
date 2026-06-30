@@ -47,7 +47,10 @@ void vertex() {
 	//tex_position = ((VERTEX.xz / 10.0) + 1.15) + (TIME * 0.0013);
 	//tex_position_2 = ((VERTEX.xz / 10.0) - 1.0) + (TIME * -0.0015);
 	//float height = texture(noise, tex_position).x + texture(noise, tex_position_2).x + offset;
-	vec2 uvHeightmap = remapUV01(UV, vec2(0./32.), vec2(34.8/32.));
+	
+	//remove bounds
+	//vec2 uvHeightmap = remapUV01(UV, vec2(0./32.), vec2(34.8/32.));
+	vec2 uvHeightmap = UV;
 	float terrainHeight = texture(terrainHeightmap, uvHeightmap).x;
 	float height = texture(heightmap, uvHeightmap).x; //reprendre calculs du fragment (remap)
 	VERTEX.y += terrainHeight + height - 0.0001;
@@ -81,11 +84,17 @@ void fragment() {
 	NORMAL_MAP = normalize(heightmapNormal + texture(normalmap, tex_position).xyz + texture(normalmap_2, tex_position_2).xyz);
 	// REFRACTION
 
+	
+
 	distortionScale.x = 0.05;
 	distortionScale.y = 0.05;
 
 	vec3 bumpTex = 2.0 * NORMAL_MAP - 1.0;
 	vec2 newUV = SCREEN_UV + bumpTex.xy * distortionScale.xy;
+	float depth_refract = textureLod(depth_texture, newUV, 0.0).r;
+
+	vec3 ndc_refract = vec3(newUV * 2.0 - 1.0, depth_refract);
+	newUV = mix(newUV, SCREEN_UV, step(0.,VERTEX.z-depth_refract));
 	vec3 refractedAlbedo = texture(screenSample, newUV).rgb;
 
 

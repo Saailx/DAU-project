@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://cgq40b18astma"]
 
+[ext_resource type="PlaneMesh" uid="uid://bvr87khm5p68c" path="res://simMesh.tres" id="1_gav55"]
 [ext_resource type="Script" uid="uid://diaxjut3rslkw" path="res://SCRIPTS/new_water.gd" id="1_iv766"]
 [ext_resource type="Shader" uid="uid://ds42ej1hdnxm8" path="res://ART/SHADERS/Water.gdshader" id="3_onk0m"]
 [ext_resource type="PackedScene" uid="uid://bg3rq5jlmquf7" path="res://ART/SCENES/sand.tscn" id="4_onk0m"]
@@ -42,10 +43,6 @@ fog_density = 1.1081
 
 [sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_75gg8"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_2cjb7"]
-subdivide_width = 1024
-subdivide_depth = 1024
-
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_jaihn"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jaihn"]
@@ -86,11 +83,6 @@ shader_parameter/water_transparency = 0.0
 [sub_resource type="BoxShape3D" id="BoxShape3D_onk0m"]
 size = Vector3(29.644272, 1, 29.808167)
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_iv766"]
-size = Vector2(30, 30)
-subdivide_width = 512
-subdivide_depth = 512
-
 [sub_resource type="SphereMesh" id="SphereMesh_jaihn"]
 flip_faces = true
 radius = 2.0
@@ -107,18 +99,18 @@ environment = SubResource("Environment_iv766")
 camera_attributes = SubResource("CameraAttributesPhysical_75gg8")
 
 [node name="WaterPlane" type="MeshInstance3D" parent="." unique_id=92569479]
-transform = Transform3D(15, 0, 0, 0, 1.709, 0, 0, 0, 15, 0, -1.6333351, 0)
-mesh = SubResource("PlaneMesh_2cjb7")
+mesh = ExtResource("1_gav55")
 surface_material_override/0 = SubResource("ShaderMaterial_08h73")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1131358506]
-transform = Transform3D(1, 0, 0, 0, 0.7009092, 0.7132505, 0, -0.7132505, 0.7009092, 0, 33.658123, -36.276775)
+transform = Transform3D(1, 0, 0, 0, -0.72488165, 0.6888734, 0, -0.6888734, -0.72488165, 0, 33.658123, -36.276775)
 light_color = Color(1, 1, 0.8862745, 1)
 light_energy = 1.148
 shadow_enabled = true
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="." unique_id=1352691959]
 transform = Transform3D(1, 0, 0, 0, -0.9843713, -0.17610562, 0, 0.17610562, -0.9843713, 0, 33.658123, -36.276775)
+visible = false
 light_color = Color(0.7346189, 0.7724909, 1, 1)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=955728300]
@@ -137,7 +129,7 @@ transform = Transform3D(1.0000076, 0, 1.4901161e-08, 0, 1, 0, -1.4901161e-08, 0,
 shape = SubResource("BoxShape3D_onk0m")
 
 [node name="Sand2" type="MeshInstance3D" parent="Sand" unique_id=1568710343 node_paths=PackedStringArray("sim")]
-mesh = SubResource("PlaneMesh_iv766")
+mesh = ExtResource("1_gav55")
 surface_material_override/0 = ExtResource("7_ega6y")
 script = ExtResource("8_pa1m1")
 sim = NodePath("../../watersimScript")
@@ -165,7 +157,7 @@ transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.02875
 transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.028754758, 0, -0.025528587, 2.82405, 0.66517067, -11.90009)
 
 [node name="Sketchfab_Scene17" parent="Node" unique_id=1269163052 instance=ExtResource("6_2cjb7")]
-transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.028754758, 0, -0.025528587, -13.395226, 1.0164127, 3.3931952)
+transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.028754758, 0, -0.025528587, -12.904376, 1.0164127, 11.378767)
 
 [node name="Sketchfab_Scene2" parent="Node" unique_id=88821548 instance=ExtResource("6_2cjb7")]
 transform = Transform3D(-0.11333061, 0.0194046, 0.09618549, 0.022413105, 0.09809923, -0.019032136, -0.08996425, -4.74046e-06, -0.12590921, -12.845843, 1.9770241, -12.018624)
@@ -183,7 +175,7 @@ transform = Transform3D(-0.0433531, 0.018543398, 0.031756423, -0.014258156, -0.0
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 10.263245, 5.722046e-06, 11.568356)
 
 [node name="Sketchfab_Scene19" parent="Node" unique_id=1072830000 instance=ExtResource("7_pa1m1")]
-transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, -19.301968, 0, 7.5303116)
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, -21.691196, 1.9073485e-06, 11.887687)
 
 [node name="Sketchfab_Scene20" parent="Node" unique_id=1092818658 instance=ExtResource("7_pa1m1")]
 transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.08355641, -4.4322014, 1.9073485e-06, 16.184147)
@@ -198,7 +190,7 @@ transform = Transform3D(-0.04315608, 0, 0.164431, 0, 0.17, 0, -0.164431, 0, -0.0
 transform = Transform3D(-0.45694664, 0, 1.741034, 0, 0.5, 0, -1.741034, 0, -0.45694664, -5.8169136, -16.74562, 1.3333364)
 
 [node name="Sketchfab_Scene6" parent="Node" unique_id=1617476321 instance=ExtResource("8_iv766")]
-transform = Transform3D(0.079933874, 0, -0.060088076, 0, 0.1, 0, 0.060088076, 0, 0.079933874, -18.461666, 0.46984863, -1.1443152)
+transform = Transform3D(0.079933874, 0, -0.060088076, 0, 0.1, 0, 0.060088076, 0, 0.079933874, -23.597061, 0.46984863, -6.4355235)
 
 [node name="Sketchfab_Scene8" parent="Node" unique_id=1047218961 instance=ExtResource("8_iv766")]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, -7.781389, 1.1699543, -12.840407)
@@ -216,7 +208,7 @@ transform = Transform3D(0.10343993, 0, 0.38639382, 0, 0.4, 0, -0.38639382, 0, 0.
 transform = Transform3D(0.1577459, 0, 0.58925056, 0, 0.61, 0, -0.58925056, 0, 0.1577459, 12.299657, -0.6863766, 4.7869816)
 
 [node name="Sketchfab_Scene29" parent="Node" unique_id=62873024 instance=ExtResource("10_6lv0m")]
-transform = Transform3D(0.08799307, 0, -0.047510214, 0, 0.1, 0, 0.047510214, 0, 0.08799307, -20.586853, 0.68550587, 1.5876875)
+transform = Transform3D(0.08799307, 0, -0.047510214, 0, 0.1, 0, 0.047510214, 0, 0.08799307, -20.187681, 0.68550396, -12.334394)
 
 [node name="Sketchfab_Scene12" parent="Node" unique_id=1818218813 instance=ExtResource("10_jb854")]
 transform = Transform3D(0.08799307, 0, -0.047510214, 0, 0.1, 0, 0.047510214, 0, 0.08799307, -20.586853, 0.68550587, 1.5876875)
@@ -252,6 +244,39 @@ transform = Transform3D(2.9082203, 0, 0.73637897, 0, 3, 0, -0.73637897, 0, 2.908
 [node name="Sketchfab_Scene26" parent="Node" unique_id=1324648951 instance=ExtResource("11_6lv0m")]
 transform = Transform3D(2.1085458, 0, -2.1340182, -0.38420534, 2.950979, -0.37961933, 2.0991473, 0.5401155, 2.0740912, 13.558274, 4.5648746, -4.550871)
 
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=461522534]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ClearButton" type="Button" parent="VBoxContainer" unique_id=191108496]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Clear Water"
+
+[node name="DropButton" type="Button" parent="VBoxContainer" unique_id=741855893]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Water Drop"
+
+[node name="HSlider" type="HSlider" parent="VBoxContainer" unique_id=350897728]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ResetButton" type="Button" parent="VBoxContainer" unique_id=1145895462]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reset Sand"
+
+[node name="RandomToggle" type="Button" parent="VBoxContainer" unique_id=478026582]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+text = "Island Only"
+
 [connection signal="build" from="watersimScript" to="Sand/Sand2" method="_on_node_build"]
 [connection signal="dig" from="watersimScript" to="Sand/Sand2" method="_on_node_dig"]
 [connection signal="released" from="watersimScript" to="Sand/Sand2" method="_on_node_released"]
+[connection signal="pressed" from="VBoxContainer/ClearButton" to="watersimScript" method="_on_clear_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/DropButton" to="watersimScript" method="_on_drop_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ResetButton" to="Sand/Sand2" method="_on_reset_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/RandomToggle" to="Sand/Sand2" method="_on_random_toggle_pressed"]

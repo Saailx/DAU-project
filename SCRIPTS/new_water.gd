@@ -25,25 +25,28 @@ var mouse_down_time = 0
 
 @onready var material = $"../WaterPlane".get_active_material(0) 
 @onready var terrainMat = $"../Sand/Sand2".get_active_material(0) as ShaderMaterial
-@onready var terrainTex = terrainMat.get_shader_parameter("heightMap")
+@onready var terrainTex : ImageTexture = terrainMat.get_shader_parameter("heightMap")
 
 
 
 func get_array_coordinates(x : int, y : int, arraySize : int):
-	return y * arraySize + x
+	return clamp(y, 0, arraySize-1)* arraySize + clamp(x, 0, arraySize-1)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	terrainHeightMap.resize(textureWidth*textureWidth)
 	waterHeightMap.resize(textureWidth*textureWidth)
+	clear_water()
 	flowMap.resize(textureWidth*textureWidth)
 	
+	
+	
 	#init bounds
-	for i in range(textureWidth):
-		flowMap[i * textureWidth].x = 1.0
-		flowMap[i * textureWidth + textureWidth -1].x = 1.0
-		flowMap[i].y = 1.0
-		flowMap[(textureWidth-1) * textureWidth + i].y = 1.0 #goes crazy if at 1.0 for whatever reason
+	#for i in range(textureWidth):
+		#flowMap[i * textureWidth].x = 1.0
+		#flowMap[i * textureWidth + textureWidth -1].x = 1.0
+		#flowMap[i].y = 1.0
+		#flowMap[(textureWidth-1) * textureWidth + i].y = 1.0 #goes crazy if at 1.0 for whatever reason
 	
 	terrainHeightMap.fill(0.0)
 	for i in range(textureWidth):
@@ -52,7 +55,7 @@ func _ready() -> void:
 			var pt = Vector2(i, j)
 			terrainHeightMap[j*textureWidth+i] = max(0.0, 1.0-(pt-center).length())
 			#bind terrain texture in shader and offset UVs as in shader
-	waterHeightMap.fill(0.0)
+	
 	var water_bytes = PackedFloat32Array(self.waterHeightMap).to_byte_array()
 	var terrain_bytes = PackedFloat32Array(self.terrainHeightMap).to_byte_array()
 	self.waterHeightTexture = Image.create_from_data(self.textureWidth, self.textureWidth, false, Image.FORMAT_RF, water_bytes )
@@ -61,23 +64,32 @@ func _ready() -> void:
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	var terrainData = terrainTex.get_image().get_data().to_float32_array()
 	
 	#set X and Y water flows
 	for y in range (textureWidth):
 		for x in range (1,textureWidth):
-			var terrainHeightCurrent : float = terrainHeightMap[get_array_coordinates(x, y, textureWidth)]
+			var terrainHeightCurrent : float = terrainData[get_array_coordinates(x, y, textureWidth)]
 			var waterHeightCurrent : float = waterHeightMap[get_array_coordinates(x, y, textureWidth)]
 			#terrainHeightMap[x*textureWidth+y] = terrainTex.get_image().get_pixel(x, y).r
-			flowMap[get_array_coordinates(x, y, textureWidth)].x = flowMap[get_array_coordinates(x, y, textureWidth)].x  * frictionFactor + (waterHeightMap[get_array_coordinates(x-1, y, textureWidth)] + max(0, terrainHeightMap[get_array_coordinates(x-1, y, textureWidth)])- waterHeightCurrent - max(0, terrainHeightCurrent)) * g * dt / dx
+			flowMap[get_array_coordinates(x, y, textureWidth)].x = flowMap[get_array_coordinates(x, y, textureWidth)].x  * frictionFactor + (waterHeightMap[get_array_coordinates(x-1, y, textureWidth)] + max(0, terrainData[get_array_coordinates(x-1, y, textureWidth)])- waterHeightCurrent - max(0, terrainHeightCurrent)) * g * dt / dx
+			if flowMap[get_array_coordinates(x, y, textureWidth)].x > 0. && waterHeightMap[get_array_coordinates(x-1, y, textureWidth)] < 0.00001:
+				flowMap[get_array_coordinates(x, y, textureWidth)].x = 0.
+			if flowMap[get_array_coordinates(x, y, textureWidth)].x < 0. && waterHeightCurrent < .00001:
+				flowMap[get_array_coordinates(x, y, textureWidth)].x = 0.
+			
 			#flowMap[get_array_coordinates(x, y, textureWidth)].y = flowMap[get_array_coordinates(x, y, textureWidth)].y  * frictionFactor + (waterHeightMap[get_array_coordinates(x-1, y, textureWidth)] + max(0, terrainHeightMap[get_array_coordinates(x-1, y, textureWidth)])- waterHeightCurrent - max(0, terrainHeightCurrent)) * g * dt / dx
 	for y in range(1,textureWidth):
 		for x in range(textureWidth):
-			var terrainHeightCurrent : float = terrainHeightMap[get_array_coordinates(x, y, textureWidth)]
+			var terrainHeightCurrent : float = terrainData[get_array_coordinates(x, y, textureWidth)]
 			var waterHeightCurrent : float = waterHeightMap[get_array_coordinates(x, y, textureWidth)]
 			#terrainHeightMap[x*textureWidth+y] = terrainTex.get_image().get_pixel(x, y).r
 			#flowMap[get_array_coordinates(x, y, textureWidth)].x = flowMap[get_array_coordinates(x, y, textureWidth)].x  * frictionFactor + (waterHeightMap[get_array_coordinates(x, y-1, textureWidth)] + max(0, terrainHeightMap[get_array_coordinates(x, y-1, textureWidth)])- waterHeightCurrent - max(0, terrainHeightCurrent)) * g * dt / dy
 			flowMap[get_array_coordinates(x, y, textureWidth)].y = flowMap[get_array_coordinates(x, y, textureWidth)].y  * frictionFactor + (waterHeightMap[get_array_coordinates(x, y-1, textureWidth)] + max(0, terrainHeightMap[get_array_coordinates(x, y-1, textureWidth)])- waterHeightCurrent - max(0, terrainHeightCurrent)) * g * dt / dy
-			
+			if flowMap[get_array_coordinates(x, y, textureWidth)].y > 0. && waterHeightMap[get_array_coordinates(x, y-1, textureWidth)] < 0.00001:
+				flowMap[get_array_coordinates(x, y, textureWidth)].y = 0.
+			if flowMap[get_array_coordinates(x, y, textureWidth)].y < 0. && waterHeightCurrent < .00001:
+				flowMap[get_array_coordinates(x, y, textureWidth)].y = 0.
 	#prevent negative or created amounts of water
 	for y in range(0, textureWidth-1):
 		for x in range(0, textureWidth-1):
@@ -112,6 +124,7 @@ func _process(delta: float) -> void:
 	waterHeightTexture = Image.create_from_data(textureWidth, textureWidth , false, Image.FORMAT_RF, PackedFloat32Array(waterHeightMap).to_byte_array())
 	self.simTexture.update(self.waterHeightTexture)
 	material.set_shader_parameter("heightmap", self.simTexture)
+	material.set_shader_parameter("terrainHeightmap", self.terrainTex)
 	
 			
 func _input(e):
@@ -129,4 +142,16 @@ func _input(e):
 		dig.emit()
 		print("dig")
 	
-	
+func clear_water() -> void:
+	waterHeightMap.fill(0.0)
+	flowMap.fill(Vector2(0.0, 0.0))
+
+func water_drop() -> void:
+	waterHeightMap[textureWidth*textureWidth/2] += %HSlider.value
+
+func _on_clear_button_pressed() -> void:
+	clear_water()
+
+
+func _on_drop_button_pressed() -> void:
+	water_drop()

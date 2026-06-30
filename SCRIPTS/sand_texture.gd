@@ -7,11 +7,15 @@ var flowMapCPU: PackedFloat32Array
 var building = false
 var digging = false
 
-@export var sim : SIMWATER
 
+@export var sim : SIMWATER
+@onready var clear_button = %ClearButton
+@onready var drop_button = %DropButton
+@onready var reset_button = %ResetButton
+@onready var random_toggle = %RandomToggle
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	createImage(32,false)
+	reset_sand()
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -129,15 +133,58 @@ func adjustNoise(x, y, octaves):#using Fractal Brownian Motion (FBM)
 		frequency *= 2.0
 		i += 1
 	
-	return result
+	var island = max(0, 1.0 - 2.0 * (Vector2(x, y)/32.0 - Vector2(0.2, 0.5)).length())
+	island = max(0.0,  (island - 0.7) / (1.- 0.7))
 	
+	if random_toggle.button_pressed:
+		return island*2.
+	return result
+
 
 func createImage(size, mipmap = false):
 	var img = Image.create_empty(size,size,mipmap, Image.FORMAT_RF)
+	var a = 2.
+	var hole_array : Array[float]= [
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, 
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, 0., 0., 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, 0., 0., 0., 0., 0., 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, 
+		a, a, a, a, a, a, 0., 0., 0., 0., 0., 0., 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, 
+		0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, 0., 0., a, a, a, a, 0., 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, 0., a, a, a, a, a, a, a, 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, 0., a, a, a, a, 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, 0., a, 0., 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, 0., a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, 
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, 
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+		
+	]
 	var octaves = 3
 	for i in range(size) :
 		for j in range(size) :
-			var color = adjustNoise(i, j, octaves)
+			#var color = adjustNoise(i, j, octaves)
+			var color = hole_array[j*size+i]
 			img.set_pixel(i, j, Color(color, color, color, color))
 	
 	var tex = ImageTexture.create_from_image(img)
@@ -178,3 +225,10 @@ func _on_node_build() -> void:
 
 func _on_node_dig() -> void:
 	digging = true
+
+func reset_sand()-> void:
+	createImage(32, false)
+
+
+func _on_reset_button_pressed() -> void:
+	reset_sand()

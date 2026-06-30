@@ -8,13 +8,17 @@ uniform float colorValue;
 void vertex() {
 	vec2 texPosition = UV;
 	float height = texture(heightMap, texPosition).r;
-	VERTEX.y = height*1.5;
+	VERTEX.y += height;
 	
 }
 
 void fragment() {
-ALBEDO =  mix(sandColor, wetSandColor, clamp(texture(heightMap, UV).r, 0.0, 1.0)) ;
-
+ALBEDO =  mix(wetSandColor, sandColor, clamp(texture(heightMap, UV).r, 0.0, 1.0)) ;
+NORMAL = normalize(vec3(
+		(texture(heightMap, UV - vec2(0.01, 0.)).r - texture(heightMap, UV + vec2(0.01, 0.)).r)/0.02, 
+		1.,
+		(texture(heightMap, UV - vec2(0.0, 0.01)).r - texture(heightMap, UV + vec2(0.0, 0.01)).r)/0.02
+	));
 }
 
 //void light() {
