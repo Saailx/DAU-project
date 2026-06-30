@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cwjmfe1enqkol"]
+
+[ext_resource type="Texture2D" uid="uid://c4kru5ka6sldk" path="res://ART/rock_0.png" id="1_2ww2d"]
+[ext_resource type="Texture2D" uid="uid://rtyeu3nfx226" path="res://ART/rock_1.png" id="2_i1dw4"]
+[ext_resource type="Texture2D" uid="uid://ctpvtxy2ih4hw" path="res://ART/rock_3.png" id="3_cekeu"]
+
+[resource]
+albedo_color = Color(0.8954667, 0.92, 0.8464, 1)
+albedo_texture = ExtResource("1_2ww2d")
+metallic_specular = 0.0
+metallic_texture = ExtResource("2_i1dw4")
+normal_enabled = true
+normal_texture = ExtResource("3_cekeu")

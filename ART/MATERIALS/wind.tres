@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dtav8lospmmav"]
+
+[ext_resource type="Shader" uid="uid://d27icncy67psp" path="res://ART/MATERIALS/wind.gdshader" id="1_15t5a"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_15t5a")

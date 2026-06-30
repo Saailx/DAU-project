@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://dydnmi3m0mo1i"]
+
+[ext_resource type="PackedScene" uid="uid://dcdfcpxjxj8jv" path="res://ART/rock.glb" id="1_mkt8y"]
+[ext_resource type="Texture2D" uid="uid://c4kru5ka6sldk" path="res://ART/rock_0.png" id="2_w7rxn"]
+[ext_resource type="Texture2D" uid="uid://rtyeu3nfx226" path="res://ART/rock_1.png" id="3_6posw"]
+[ext_resource type="Texture2D" uid="uid://ctpvtxy2ih4hw" path="res://ART/rock_3.png" id="4_jouer"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_icjor"]
+albedo_color = Color(0.8924, 0.92, 0.91448003, 1)
+albedo_texture = ExtResource("2_w7rxn")
+metallic_specular = 0.0
+metallic_texture = ExtResource("3_6posw")
+normal_enabled = true
+normal_texture = ExtResource("4_jouer")
+
+[node name="Sketchfab_Scene" unique_id=1402420266 instance=ExtResource("1_mkt8y")]
+
+[node name="Object_2" parent="Sketchfab_model/Rock_Obj_cleaner_gles" parent_id_path=PackedInt32Array(440558617) index="0" unique_id=1415255487]
+surface_material_override/0 = SubResource("StandardMaterial3D_icjor")

@@ -11,7 +11,7 @@ var g = 10.0
 var dt = 0.016
 var dx = 1.0
 var dy = 1.0
-var friction = 0.15
+var friction = 0.08
 var frictionFactor = pow(1.0-friction,dt)
 var waterHeightTexture : Image
 var terrainHeightTexture : Image

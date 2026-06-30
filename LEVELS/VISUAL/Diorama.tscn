@@ -1,13 +1,18 @@
 [gd_scene format=3 uid="uid://cgq40b18astma"]
 
 [ext_resource type="Script" uid="uid://diaxjut3rslkw" path="res://SCRIPTS/new_water.gd" id="1_iv766"]
-[ext_resource type="Material" uid="uid://cm0snq05t2dp6" path="res://ART/MATERIALS/sand.tres" id="2_mbyyn"]
-[ext_resource type="PackedScene" uid="uid://bvgpkajxt5mnb" path="res://ART/SCENES/sandcastle.tscn" id="3_jaihn"]
 [ext_resource type="Shader" uid="uid://ds42ej1hdnxm8" path="res://ART/SHADERS/Water.gdshader" id="3_onk0m"]
 [ext_resource type="PackedScene" uid="uid://bg3rq5jlmquf7" path="res://ART/SCENES/sand.tscn" id="4_onk0m"]
-[ext_resource type="Shader" uid="uid://cng3s48olao1c" path="res://ART/SHADERS/test.gdshader" id="4_pa1m1"]
+[ext_resource type="PackedScene" uid="uid://dcdfcpxjxj8jv" path="res://ART/rock.glb" id="6_2cjb7"]
 [ext_resource type="Material" uid="uid://bggi2das42il2" path="res://ART/MATERIALS/sandShader.tres" id="7_ega6y"]
+[ext_resource type="PackedScene" uid="uid://fns08fphoj0x" path="res://ART/MATERIALS/sketchfab_scene2.tscn" id="7_pa1m1"]
+[ext_resource type="PackedScene" uid="uid://dydnmi3m0mo1i" path="res://ART/MATERIALS/sketchfab_scene3.tscn" id="8_iv766"]
 [ext_resource type="Script" uid="uid://cduj7041fkq1l" path="res://SCRIPTS/sand_texture.gd" id="8_pa1m1"]
+[ext_resource type="PackedScene" uid="uid://b7dnra7sevsgc" path="res://ART/MATERIALS/underwater_plant.glb" id="9_75gg8"]
+[ext_resource type="PackedScene" uid="uid://dt7tbua0fitse" path="res://ART/MATERIALS/plant2.tscn" id="10_6lv0m"]
+[ext_resource type="PackedScene" uid="uid://swm6ekmiyjro" path="res://ART/MATERIALS/tropical_plant.glb" id="10_jb854"]
+[ext_resource type="PackedScene" uid="uid://qds7qhy1jstb" path="res://ART/MATERIALS/taro_small.glb" id="11_6lv0m"]
+[ext_resource type="PackedScene" uid="uid://daxvlya00cp3a" path="res://ART/MATERIALS/plant1.tscn" id="12_jb854"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ega6y"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -20,11 +25,22 @@ sky_material = SubResource("ProceduralSkyMaterial_ega6y")
 background_mode = 2
 sky = SubResource("Sky_pa1m1")
 tonemap_mode = 2
+ssao_radius = 2.55
+ssao_intensity = 2.92
+ssao_power = 0.40191492
 glow_enabled = true
+glow_normalized = true
+glow_intensity = 0.43
+glow_strength = 0.55
+glow_bloom = 0.14
+glow_hdr_threshold = 0.48
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.3904, 0.61, 0.48922005, 1)
+fog_light_energy = 0.48
+fog_density = 1.1081
 
 [sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_75gg8"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_jaihn"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_2cjb7"]
 subdivide_width = 1024
@@ -67,15 +83,6 @@ shader_parameter/depth_distance = 4.70000007003564
 shader_parameter/beers_law = 17.20000025630064
 shader_parameter/water_transparency = 0.0
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_pa1m1"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_iv766"]
-resource_local_to_scene = true
-render_priority = 0
-shader = ExtResource("4_pa1m1")
-shader_parameter/flowMap = SubResource("NoiseTexture2D_pa1m1")
-shader_parameter/color = Vector3(1, 0, 0)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_onk0m"]
 size = Vector3(29.644272, 1, 29.808167)
 
@@ -84,44 +91,40 @@ size = Vector2(30, 30)
 subdivide_width = 512
 subdivide_depth = 512
 
+[sub_resource type="SphereMesh" id="SphereMesh_jaihn"]
+flip_faces = true
+radius = 2.0
+height = 2.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2cjb7"]
+shading_mode = 0
+albedo_color = Color(0.22049999, 0.45, 0.32377502, 1)
+
 [node name="Diorama" type="Node3D" unique_id=34787093]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1312024083]
 environment = SubResource("Environment_iv766")
 camera_attributes = SubResource("CameraAttributesPhysical_75gg8")
 
-[node name="Ground" type="MeshInstance3D" parent="." unique_id=1230018374]
-transform = Transform3D(120, 0, 0, 0, 2.272, 0, 0, 0, 86.164, 0.33982277, -4.010296, 20.612307)
-visible = false
-material_override = ExtResource("2_mbyyn")
-mesh = SubResource("BoxMesh_jaihn")
-
 [node name="WaterPlane" type="MeshInstance3D" parent="." unique_id=92569479]
 transform = Transform3D(15, 0, 0, 0, 1.709, 0, 0, 0, 15, 0, -1.6333351, 0)
 mesh = SubResource("PlaneMesh_2cjb7")
 surface_material_override/0 = SubResource("ShaderMaterial_08h73")
 
-[node name="WaterPlane2" type="MeshInstance3D" parent="." unique_id=1581084080]
-transform = Transform3D(15, 0, 0, 0, 1.709, 0, 0, 0, 15, 0, 6.9723797, 0)
-visible = false
-mesh = SubResource("PlaneMesh_2cjb7")
-surface_material_override/0 = SubResource("ShaderMaterial_iv766")
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1131358506]
-transform = Transform3D(1, 0, 0, 0, -0.4926515, 0.87022674, 0, -0.87022674, -0.4926515, 0, 33.658123, -36.276775)
+transform = Transform3D(1, 0, 0, 0, 0.7009092, 0.7132505, 0, -0.7132505, 0.7009092, 0, 33.658123, -36.276775)
 light_color = Color(1, 1, 0.8862745, 1)
+light_energy = 1.148
+shadow_enabled = true
 
-[node name="Sandcastle" parent="." unique_id=1472345 instance=ExtResource("3_jaihn")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6023335, 0)
-visible = false
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="." unique_id=1352691959]
+transform = Transform3D(1, 0, 0, 0, -0.9843713, -0.17610562, 0, 0.17610562, -0.9843713, 0, 33.658123, -36.276775)
+light_color = Color(0.7346189, 0.7724909, 1, 1)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=955728300]
-transform = Transform3D(0.83153737, -0.3200316, 0.45401013, 1.2138447e-08, 0.81734616, 0.5761469, -0.5554686, -0.47908777, 0.6796539, 15.361075, 18.103127, 23.660994)
+transform = Transform3D(0.83153737, -0.3200316, 0.45401013, 1.2138447e-08, 0.81734616, 0.5761469, -0.5554686, -0.47908777, 0.6796539, 18.91859, 22.617676, 28.986599)
 fov = 40.0
 far = 230.0
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=41449212]
-visible = false
 
 [node name="Sand" parent="." unique_id=1816009884 instance=ExtResource("4_onk0m")]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
@@ -141,6 +144,113 @@ sim = NodePath("../../watersimScript")
 
 [node name="watersimScript" type="Node" parent="." unique_id=286761744]
 script = ExtResource("1_iv766")
+
+[node name="bg_sphere" type="MeshInstance3D" parent="." unique_id=1745264927]
+transform = Transform3D(55.427414, 0, 0, 0, 55.427414, 0, 0, 0, 55.427414, 0, 0, 0)
+mesh = SubResource("SphereMesh_jaihn")
+surface_material_override/0 = SubResource("StandardMaterial3D_2cjb7")
+
+[node name="Node" type="Node" parent="." unique_id=1603160826]
+
+[node name="Sketchfab_Scene13" parent="Node" unique_id=862121043 instance=ExtResource("6_2cjb7")]
+transform = Transform3D(0.09216736, 0, 0.038796607, 0, 0.1, 0, -0.038796607, 0, 0.09216736, -20.201324, 0.06445134, -7.526519)
+
+[node name="Sketchfab_Scene14" parent="Node" unique_id=1641408917 instance=ExtResource("6_2cjb7")]
+transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.028754758, 0, -0.025528587, 13.296417, 0.667614, 7.0364285)
+
+[node name="Sketchfab_Scene15" parent="Node" unique_id=1911276131 instance=ExtResource("6_2cjb7")]
+transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.028754758, 0, -0.025528587, -10.703714, 1.6527576, 13.45017)
+
+[node name="Sketchfab_Scene16" parent="Node" unique_id=1400539356 instance=ExtResource("6_2cjb7")]
+transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.028754758, 0, -0.025528587, 2.82405, 0.66517067, -11.90009)
+
+[node name="Sketchfab_Scene17" parent="Node" unique_id=1269163052 instance=ExtResource("6_2cjb7")]
+transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.028754758, 0, -0.025528587, -13.395226, 1.0164127, 3.3931952)
+
+[node name="Sketchfab_Scene2" parent="Node" unique_id=88821548 instance=ExtResource("6_2cjb7")]
+transform = Transform3D(-0.11333061, 0.0194046, 0.09618549, 0.022413105, 0.09809923, -0.019032136, -0.08996425, -4.74046e-06, -0.12590921, -12.845843, 1.9770241, -12.018624)
+
+[node name="Sketchfab_Scene7" parent="Node" unique_id=436289276 instance=ExtResource("6_2cjb7")]
+transform = Transform3D(-0.058220826, 0.0015635424, -0.018273585, 0.0008842542, 0.1502511, -0.0006890317, 0.018349206, -0.00227963, -0.057947695, -8.946218, 1.6128054, 16.334929)
+
+[node name="Sketchfab_Scene18" parent="Node" unique_id=1260086353 instance=ExtResource("7_pa1m1")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 8.717185, 0, -12.222942)
+
+[node name="Sketchfab_Scene10" parent="Node" unique_id=280137159 instance=ExtResource("6_2cjb7")]
+transform = Transform3D(-0.0433531, 0.018543398, 0.031756423, -0.014258156, -0.0743601, -0.08905893, 0.0019494963, -0.1314814, 0.054846555, 16.178705, 2.7390175, 8.796385)
+
+[node name="Sketchfab_Scene3" parent="Node" unique_id=1132810798 instance=ExtResource("7_pa1m1")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 10.263245, 5.722046e-06, 11.568356)
+
+[node name="Sketchfab_Scene19" parent="Node" unique_id=1072830000 instance=ExtResource("7_pa1m1")]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, -19.301968, 0, 7.5303116)
+
+[node name="Sketchfab_Scene20" parent="Node" unique_id=1092818658 instance=ExtResource("7_pa1m1")]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.08355641, -4.4322014, 1.9073485e-06, 16.184147)
+
+[node name="Sketchfab_Scene21" parent="Node" unique_id=1775018941 instance=ExtResource("7_pa1m1")]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, -4.2222733, 1.9073485e-06, -18.84696)
+
+[node name="Sketchfab_Scene5" parent="Node" unique_id=1402420266 instance=ExtResource("8_iv766")]
+transform = Transform3D(-0.04315608, 0, 0.164431, 0, 0.17, 0, -0.164431, 0, -0.04315608, 16.260048, 0.45213795, 1.3333364)
+
+[node name="Sketchfab_Scene31" parent="Node" unique_id=1167525366 instance=ExtResource("8_iv766")]
+transform = Transform3D(-0.45694664, 0, 1.741034, 0, 0.5, 0, -1.741034, 0, -0.45694664, -5.8169136, -16.74562, 1.3333364)
+
+[node name="Sketchfab_Scene6" parent="Node" unique_id=1617476321 instance=ExtResource("8_iv766")]
+transform = Transform3D(0.079933874, 0, -0.060088076, 0, 0.1, 0, 0.060088076, 0, 0.079933874, -18.461666, 0.46984863, -1.1443152)
+
+[node name="Sketchfab_Scene8" parent="Node" unique_id=1047218961 instance=ExtResource("8_iv766")]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, -7.781389, 1.1699543, -12.840407)
+
+[node name="Sketchfab_Scene11" parent="Node" unique_id=1018437642 instance=ExtResource("8_iv766")]
+transform = Transform3D(0.116932236, -0.003908758, 0.026579894, 0.020775836, 0.023247983, -4.656613e-10, -0.027855031, 0.00093112537, 0.11157936, 4.9383183, 1.8600531, 14.441706)
+
+[node name="Sketchfab_Scene" parent="Node" unique_id=1528000571 instance=ExtResource("9_75gg8")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, -8.355043, 1.9073486e-06, 13.658077)
+
+[node name="Sketchfab_Scene4" parent="Node" unique_id=360640969 instance=ExtResource("9_75gg8")]
+transform = Transform3D(0.10343993, 0, 0.38639382, 0, 0.4, 0, -0.38639382, 0, 0.10343993, -12.335939, 1.9073486e-06, -6.4495068)
+
+[node name="Sketchfab_Scene9" parent="Node" unique_id=2036097532 instance=ExtResource("9_75gg8")]
+transform = Transform3D(0.1577459, 0, 0.58925056, 0, 0.61, 0, -0.58925056, 0, 0.1577459, 12.299657, -0.6863766, 4.7869816)
+
+[node name="Sketchfab_Scene29" parent="Node" unique_id=62873024 instance=ExtResource("10_6lv0m")]
+transform = Transform3D(0.08799307, 0, -0.047510214, 0, 0.1, 0, 0.047510214, 0, 0.08799307, -20.586853, 0.68550587, 1.5876875)
+
+[node name="Sketchfab_Scene12" parent="Node" unique_id=1818218813 instance=ExtResource("10_jb854")]
+transform = Transform3D(0.08799307, 0, -0.047510214, 0, 0.1, 0, 0.047510214, 0, 0.08799307, -20.586853, 0.68550587, 1.5876875)
+visible = false
+
+[node name="Sketchfab_Scene28" parent="Node" unique_id=214726430 instance=ExtResource("10_6lv0m")]
+transform = Transform3D(0.07713694, 0.018843938, -0.009736454, -0.018695595, 0.07774899, 0.0023598135, 0.010018346, 0, 0.07937022, 15.789261, -0.15095711, 9.995797)
+
+[node name="Sketchfab_Scene22" parent="Node" unique_id=49574451 instance=ExtResource("10_jb854")]
+transform = Transform3D(0.07713694, 0.018843938, -0.009736454, -0.018695595, 0.07774899, 0.0023598135, 0.010018346, 0, 0.07937022, 15.789261, -0.15095711, 9.995797)
+visible = false
+
+[node name="Sketchfab_Scene30" parent="Node" unique_id=908453218 instance=ExtResource("10_6lv0m")]
+transform = Transform3D(0.07179321, -0.0063820877, -0.03471312, 0.0066788, 0.07971625, -0.00084301824, 0.03465726, -0.0021414869, 0.07207139, 5.3009024, 3.2970076, -18.625858)
+
+[node name="Sketchfab_Scene32" parent="Node" unique_id=843398013 instance=ExtResource("10_6lv0m")]
+transform = Transform3D(0.071793206, -0.006382087, -0.03471312, -0.0052676345, 0.075862534, -0.024841955, 0.034899622, 0.024579259, 0.06765997, -11.250558, -2.777917, 17.29879)
+
+[node name="Sketchfab_Scene23" parent="Node" unique_id=781381091 instance=ExtResource("10_jb854")]
+transform = Transform3D(0.07179321, -0.0063820877, -0.03471312, 0.0066788, 0.07971625, -0.00084301824, 0.03465726, -0.0021414869, 0.07207139, 5.3009024, 3.2970076, -18.625858)
+visible = false
+
+[node name="Sketchfab_Scene24" parent="Node" unique_id=580327275 instance=ExtResource("11_6lv0m")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 4.948665, 1.8206072, 16.254951)
+visible = false
+
+[node name="Sketchfab_Scene27" parent="Node" unique_id=527276807 instance=ExtResource("12_jb854")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 4.948665, 1.8206072, 16.254951)
+
+[node name="Sketchfab_Scene25" parent="Node" unique_id=1626413665 instance=ExtResource("11_6lv0m")]
+transform = Transform3D(2.9082203, 0, 0.73637897, 0, 3, 0, -0.73637897, 0, 2.9082203, -16.104969, 2.3990564, -6.3787155)
+
+[node name="Sketchfab_Scene26" parent="Node" unique_id=1324648951 instance=ExtResource("11_6lv0m")]
+transform = Transform3D(2.1085458, 0, -2.1340182, -0.38420534, 2.950979, -0.37961933, 2.0991473, 0.5401155, 2.0740912, 13.558274, 4.5648746, -4.550871)
 
 [connection signal="build" from="watersimScript" to="Sand/Sand2" method="_on_node_build"]
 [connection signal="dig" from="watersimScript" to="Sand/Sand2" method="_on_node_dig"]

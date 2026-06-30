@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dt7tbua0fitse"]
+
+[ext_resource type="PackedScene" uid="uid://swm6ekmiyjro" path="res://ART/MATERIALS/tropical_plant.glb" id="1_2hgut"]
+[ext_resource type="Texture2D" uid="uid://bg23rgfx27pm5" path="res://ART/MATERIALS/tropical_plant_0.png" id="2_flj5x"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fk6p0"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("2_flj5x")
+roughness = 0.36
+
+[node name="Sketchfab_Scene" unique_id=62873024 instance=ExtResource("1_2hgut")]
+
+[node name="leaves_tropical_plant_0" parent="Sketchfab_model/7d910dab59a049d3996af71d3828b651_fbx/RootNode/leaves/Object_7" parent_id_path=PackedInt32Array(643577418) index="0" unique_id=711509318]
+surface_material_override/0 = SubResource("StandardMaterial3D_fk6p0")

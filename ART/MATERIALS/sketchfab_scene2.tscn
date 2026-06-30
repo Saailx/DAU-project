@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://fns08fphoj0x"]
+
+[ext_resource type="PackedScene" uid="uid://dcdfcpxjxj8jv" path="res://ART/rock.glb" id="1_8sfq2"]
+[ext_resource type="Material" uid="uid://cwjmfe1enqkol" path="res://ART/MATERIALS/rock.tres" id="2_rf5qu"]
+
+[node name="Sketchfab_Scene" unique_id=1402420266 instance=ExtResource("1_8sfq2")]
+
+[node name="Object_2" parent="Sketchfab_model/Rock_Obj_cleaner_gles" parent_id_path=PackedInt32Array(440558617) index="0" unique_id=1415255487]
+surface_material_override/0 = ExtResource("2_rf5qu")
