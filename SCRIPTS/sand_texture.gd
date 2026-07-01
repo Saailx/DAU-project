@@ -6,6 +6,7 @@ var heightMapCPU : PackedFloat32Array
 var flowMapCPU: PackedFloat32Array
 var building = false
 var digging = false
+var can_interact = true
 
 
 @export var sim : SIMWATER
@@ -20,18 +21,20 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	if building : 
+	if building && can_interact: 
 		var mat = get_node(".").get_active_material(0) as ShaderMaterial
 		var image = mat.get_shader_parameter("heightMap")
 		var pos_on_texture : Vector2i
 		pos_on_texture = meshCoordToGridUv(mouse_world_pos)*32
 		modifyLocalValues(pos_on_texture, image, 0.1)
-	if digging : 
+		
+	if digging && can_interact: 
 		var mat = get_node(".").get_active_material(0) as ShaderMaterial
 		var image = mat.get_shader_parameter("heightMap")
 		var pos_on_texture : Vector2i
 		pos_on_texture = meshCoordToGridUv(mouse_world_pos)*32
 		modifyLocalValues(pos_on_texture, image, -0.4)
+		
 		
 
 func _physics_process(delta: float) -> void:
@@ -137,7 +140,7 @@ func adjustNoise(x, y, octaves):#using Fractal Brownian Motion (FBM)
 	island = max(0.0,  (island - 0.7) / (1.- 0.7))
 	
 	if random_toggle.button_pressed:
-		return island*2.
+		return island * 2.
 	return result
 
 
@@ -183,9 +186,12 @@ func createImage(size, mipmap = false):
 	var octaves = 3
 	for i in range(size) :
 		for j in range(size) :
-			#var color = adjustNoise(i, j, octaves)
-			var color = hole_array[j*size+i]
-			img.set_pixel(i, j, Color(color, color, color, color))
+			if random_toggle.button_pressed: 
+				var color = adjustNoise(i, j, octaves)
+				img.set_pixel(i, j, Color(color, color, color, color))
+			else:
+				var color = hole_array[j*size+i]
+				img.set_pixel(i, j, Color(color, color, color, color))
 	
 	var tex = ImageTexture.create_from_image(img)
 	var currentMesh = get_node(".")
@@ -194,8 +200,16 @@ func createImage(size, mipmap = false):
 	
 
 func modifyLocalValues(pos : Vector2i, img : ImageTexture, value : float):
+	var brush_size : int = %BrushSlider.value
 	var img_to_edit = img.get_image()
-	var current_color = clamp(img.get_image().get_pixel(pos.x, pos.y).r + value, 0.0, 10.0)
+	#var current_color = clamp(img.get_image().get_pixel(pos.x, pos.y).r + value, 0.0, 5.0)
+	var current_color : float
+	#var average_color = (img.get_image().get_pixel(pos.x +1, pos.y +1).r * img.get_image().get_pixel(pos.x -1, pos.y +1).r * img.get_image().get_pixel(pos.x +1, pos.y -1).r * img.get_image().get_pixel(pos.x -1, pos.y -1).r) / 4
+	for brush_width in range(brush_size):
+		for brush_height in range(brush_size):
+			current_color = clamp(img.get_image().get_pixel(clamp(pos.x , 1, 31), clamp(pos.y , 1, 31)).r + value, 0.0, 10.0)
+			img_to_edit.set_pixel(clamp(int(pos.x + brush_width), 0, 31), clamp(int(pos.y + brush_height), 0, 31), Color(current_color,current_color,current_color))
+		
 	img_to_edit.set_pixel(int(pos.x), int(pos.y), Color(current_color,current_color,current_color))
 	img.update(img_to_edit)
 	updateTerrainHeight(img)
@@ -221,10 +235,11 @@ func _on_node_released() -> void:
 
 func _on_node_build() -> void:
 	building = true
-
+	
 
 func _on_node_dig() -> void:
 	digging = true
+	
 
 func reset_sand()-> void:
 	createImage(32, false)
@@ -232,3 +247,74 @@ func reset_sand()-> void:
 
 func _on_reset_button_pressed() -> void:
 	reset_sand()
+
+
+func _on_v_box_container_mouse_entered() -> void:
+	can_interact = false
+	print("off")
+
+func _on_v_box_container_mouse_exited() -> void:
+	can_interact = true
+	print("on")
+
+
+func _on_clear_button_mouse_entered() -> void:
+	can_interact = false
+
+
+func _on_drop_button_mouse_entered() -> void:
+	can_interact = false
+
+
+func _on_label_mouse_entered() -> void:
+	can_interact = false
+
+func _on_h_slider_mouse_entered() -> void:
+	can_interact = false
+
+
+func _on_reset_button_mouse_entered() -> void:
+	can_interact = false
+
+
+func _on_random_toggle_mouse_entered() -> void:
+	can_interact = false
+
+
+func _on_label_2_mouse_entered() -> void:
+	can_interact = false
+
+
+func _on_brush_slider_mouse_entered() -> void:
+	can_interact = false
+
+
+func _on_brush_slider_mouse_exited() -> void:
+	can_interact = true
+
+
+func _on_label_2_mouse_exited() -> void:
+	can_interact = true
+
+func _on_random_toggle_mouse_exited() -> void:
+	can_interact = true
+
+
+func _on_reset_button_mouse_exited() -> void:
+	can_interact = true
+
+
+func _on_h_slider_mouse_exited() -> void:
+	can_interact = true
+
+
+func _on_label_mouse_exited() -> void:
+	can_interact = true
+
+
+func _on_drop_button_mouse_exited() -> void:
+	can_interact = true
+
+
+func _on_clear_button_mouse_exited() -> void:
+	can_interact = true

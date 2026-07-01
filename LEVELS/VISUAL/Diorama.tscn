@@ -157,7 +157,7 @@ transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.02875
 transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.028754758, 0, -0.025528587, 2.82405, 0.66517067, -11.90009)
 
 [node name="Sketchfab_Scene17" parent="Node" unique_id=1269163052 instance=ExtResource("6_2cjb7")]
-transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.028754758, 0, -0.025528587, -12.904376, 1.0164127, 11.378767)
+transform = Transform3D(-0.024786307, 0, 0.02961588, 0, 0.042775966, 0, -0.028754758, 0, -0.025528587, -14.320694, 1.0164127, 5.0275316)
 
 [node name="Sketchfab_Scene2" parent="Node" unique_id=88821548 instance=ExtResource("6_2cjb7")]
 transform = Transform3D(-0.11333061, 0.0194046, 0.09618549, 0.022413105, 0.09809923, -0.019032136, -0.08996425, -4.74046e-06, -0.12590921, -12.845843, 1.9770241, -12.018624)
@@ -175,7 +175,7 @@ transform = Transform3D(-0.0433531, 0.018543398, 0.031756423, -0.014258156, -0.0
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 10.263245, 5.722046e-06, 11.568356)
 
 [node name="Sketchfab_Scene19" parent="Node" unique_id=1072830000 instance=ExtResource("7_pa1m1")]
-transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, -21.691196, 1.9073485e-06, 11.887687)
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, -20.078438, 3.814697e-06, 8.458625)
 
 [node name="Sketchfab_Scene20" parent="Node" unique_id=1092818658 instance=ExtResource("7_pa1m1")]
 transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.08355641, -4.4322014, 1.9073485e-06, 16.184147)
@@ -190,7 +190,7 @@ transform = Transform3D(-0.04315608, 0, 0.164431, 0, 0.17, 0, -0.164431, 0, -0.0
 transform = Transform3D(-0.45694664, 0, 1.741034, 0, 0.5, 0, -1.741034, 0, -0.45694664, -5.8169136, -16.74562, 1.3333364)
 
 [node name="Sketchfab_Scene6" parent="Node" unique_id=1617476321 instance=ExtResource("8_iv766")]
-transform = Transform3D(0.079933874, 0, -0.060088076, 0, 0.1, 0, 0.060088076, 0, 0.079933874, -23.597061, 0.46984863, -6.4355235)
+transform = Transform3D(0.079933874, 0, -0.060088076, 0, 0.1, 0, 0.060088076, 0, 0.079933874, -18.051033, 0.46985054, -1.135859)
 
 [node name="Sketchfab_Scene8" parent="Node" unique_id=1047218961 instance=ExtResource("8_iv766")]
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, -7.781389, 1.1699543, -12.840407)
@@ -245,8 +245,8 @@ transform = Transform3D(2.9082203, 0, 0.73637897, 0, 3, 0, -0.73637897, 0, 2.908
 transform = Transform3D(2.1085458, 0, -2.1340182, -0.38420534, 2.950979, -0.37961933, 2.0991473, 0.5401155, 2.0740912, 13.558274, 4.5648746, -4.550871)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=461522534]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 183.0
+offset_bottom = 272.0
 
 [node name="ClearButton" type="Button" parent="VBoxContainer" unique_id=191108496]
 unique_name_in_owner = true
@@ -258,9 +258,15 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Water Drop"
 
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1091655640]
+layout_mode = 2
+text = "Water Drop Amount"
+
 [node name="HSlider" type="HSlider" parent="VBoxContainer" unique_id=350897728]
 unique_name_in_owner = true
 layout_mode = 2
+min_value = 0.1
+value = 1.1
 
 [node name="ResetButton" type="Button" parent="VBoxContainer" unique_id=1145895462]
 unique_name_in_owner = true
@@ -273,10 +279,39 @@ layout_mode = 2
 toggle_mode = true
 text = "Island Only"
 
+[node name="Label2" type="Label" parent="VBoxContainer" unique_id=1031540602]
+layout_mode = 2
+text = "Brush Size"
+
+[node name="BrushSlider" type="HSlider" parent="VBoxContainer" unique_id=895737409]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 30.0
+value = 1.0
+
 [connection signal="build" from="watersimScript" to="Sand/Sand2" method="_on_node_build"]
 [connection signal="dig" from="watersimScript" to="Sand/Sand2" method="_on_node_dig"]
 [connection signal="released" from="watersimScript" to="Sand/Sand2" method="_on_node_released"]
+[connection signal="mouse_entered" from="VBoxContainer" to="Sand/Sand2" method="_on_v_box_container_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer" to="Sand/Sand2" method="_on_v_box_container_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/ClearButton" to="Sand/Sand2" method="_on_clear_button_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ClearButton" to="Sand/Sand2" method="_on_clear_button_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/ClearButton" to="watersimScript" method="_on_clear_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/DropButton" to="Sand/Sand2" method="_on_drop_button_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/DropButton" to="Sand/Sand2" method="_on_drop_button_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/DropButton" to="watersimScript" method="_on_drop_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/Label" to="Sand/Sand2" method="_on_label_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Label" to="Sand/Sand2" method="_on_label_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/HSlider" to="Sand/Sand2" method="_on_h_slider_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/HSlider" to="Sand/Sand2" method="_on_h_slider_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/ResetButton" to="Sand/Sand2" method="_on_reset_button_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ResetButton" to="Sand/Sand2" method="_on_reset_button_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/ResetButton" to="Sand/Sand2" method="_on_reset_button_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/RandomToggle" to="Sand/Sand2" method="_on_random_toggle_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/RandomToggle" to="Sand/Sand2" method="_on_random_toggle_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/RandomToggle" to="Sand/Sand2" method="_on_random_toggle_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/Label2" to="Sand/Sand2" method="_on_label_2_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Label2" to="Sand/Sand2" method="_on_label_2_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/BrushSlider" to="Sand/Sand2" method="_on_brush_slider_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/BrushSlider" to="Sand/Sand2" method="_on_brush_slider_mouse_exited"]

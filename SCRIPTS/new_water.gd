@@ -11,7 +11,7 @@ var g = 10.0
 var dt = 0.016
 var dx = 1.0
 var dy = 1.0
-var friction = 0.08
+var friction = 0.1
 var frictionFactor = pow(1.0-friction,dt)
 var waterHeightTexture : Image
 var terrainHeightTexture : Image
@@ -129,8 +129,6 @@ func _process(delta: float) -> void:
 			
 func _input(e):
 	if e is InputEventMouseButton:
-		
-		print("pressed")
 		mouse_down_pos = e.position
 		build.emit()
 	if e.is_action_released("build"):
@@ -140,17 +138,19 @@ func _input(e):
 			#mouse_down_time = Time.get_ticks_msec()
 	if Input.is_action_pressed("dig"):
 		dig.emit()
-		print("dig")
 	
 func clear_water() -> void:
 	waterHeightMap.fill(0.0)
 	flowMap.fill(Vector2(0.0, 0.0))
+	
+	
 
 func water_drop() -> void:
 	waterHeightMap[textureWidth*textureWidth/2] += %HSlider.value
 
 func _on_clear_button_pressed() -> void:
 	clear_water()
+	self.simTexture.update(self.waterHeightTexture)
 
 
 func _on_drop_button_pressed() -> void:
